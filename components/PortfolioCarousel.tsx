@@ -9,6 +9,10 @@ import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
+const isVideo = (url: string) => /\.(mp4|webm|ogg)$/i.test(url);
+const isImage = (url: string) => /\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(url);
+const isValidMediaUrl = (url: string) => url && typeof url === 'string' && url.trim() !== '' && url !== '/' && url !== '#';
+
 const PortfolioCarousel = () => {
   const { data: projects, error } = useSWR(
     "/api/portfolio?featured=true&status=published",
@@ -55,64 +59,65 @@ const PortfolioCarousel = () => {
           className="!pb-12"
           aria-label="Featured projects carousel"
         >
-          {projects.map((item: any, index: number) => (
-            <SwiperSlide
-              key={item._id || index}
-              aria-label={`Featured project: ${item.title}`}
-              role="group"
-              className="flex justify-center"
-            >
-              <div className="max-w-md w-full bg-white/70 dark:bg-white/10 rounded-3xl shadow-xl border border-white/30 dark:border-white/20 glass-panel overflow-hidden flex flex-col items-center mx-auto relative">
-                <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-white shadow-md z-10">
-                  {item.domain
-                    ?.replace("3d", "3D Animation")
-                    .replace("web", "Web")
-                    .replace("security", "Security")
-                    .replace("video", "Video Editing")
-                    .replace("mobile", "Mobile") || "Other"}
-                </span>
-                {item.videoUrl &&
-                (item.videoUrl.endsWith(".mp4") ||
-                  item.videoUrl.endsWith(".webm")) ? (
-                  <PortfolioVideo
-                    src={item.videoUrl}
-                    poster={item.images?.[0]}
-                    ariaLabel={item.title + " video preview"}
-                    className="w-full h-64 object-cover rounded-t-3xl"
-                    style={{ maxHeight: "16rem" }}
-                  />
-                ) : item.images?.[0] ? (
-                  <img
-                    src={item.images[0]}
-                    alt={item.title + " preview"}
-                    className="w-full h-64 object-cover rounded-t-3xl"
-                    style={{ maxHeight: "16rem" }}
-                  />
-                ) : (
-                  <div
-                    className="w-full h-64 bg-gray-200 rounded-t-3xl flex items-center justify-center"
-                    role="img"
-                    aria-label="No image available"
-                  />
-                )}
-                <div className="p-6 w-full">
-                  <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white text-center">
-                    {item.title}
-                  </h3>
-                  <div className="flex flex-wrap gap-2 mb-3 justify-center">
-                    {item.tags?.map((tag: string) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 bg-white/70 dark:bg-white/20 text-gray-700 dark:text-gray-200 text-xs rounded-full shadow-sm border border-gray-200 dark:border-white/30"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+          {projects.map((item: any, index: number) => {
+            const media = item.mediaUrls && item.mediaUrls[0];
+            return (
+              <SwiperSlide
+                key={item._id || index}
+                aria-label={`Featured project: ${item.title}`}
+                role="group"
+                className="flex justify-center"
+              >
+                <div className="max-w-md w-full bg-white/70 dark:bg-white/10 rounded-3xl shadow-xl border border-white/30 dark:border-white/20 glass-panel overflow-hidden flex flex-col items-center mx-auto relative">
+                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-white shadow-md z-10">
+                    {item.domain
+                      ?.replace("3d", "3D Animation")
+                      .replace("web", "Web")
+                      .replace("security", "Security")
+                      .replace("video", "Video Editing")
+                      .replace("mobile", "Mobile") || "Other"}
+                  </span>
+                  {media && isValidMediaUrl(media) ? (
+                    isVideo(media) ? (
+                      <video
+                        src={media}
+                        className="w-full h-64 object-cover rounded-t-3xl bg-black/60"
+                        muted
+                        controls
+                        style={{ maxHeight: "16rem" }}
+                      />
+                    ) : isImage(media) ? (
+                      <img
+                        src={media}
+                        alt={item.title + " preview"}
+                        className="w-full h-64 object-cover rounded-t-3xl"
+                        style={{ maxHeight: "16rem" }}
+                      />
+                    ) : (
+                      <div className="w-full h-64 bg-gray-200 rounded-t-3xl flex items-center justify-center" role="img" aria-label="No media available" />
+                    )
+                  ) : (
+                    <div className="w-full h-64 bg-gray-200 rounded-t-3xl flex items-center justify-center" role="img" aria-label="No media available" />
+                  )}
+                  <div className="p-6 w-full">
+                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white text-center">
+                      {item.title}
+                    </h3>
+                    <div className="flex flex-wrap gap-2 mb-3 justify-center">
+                      {item.tags?.map((tag: string) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 bg-white/70 dark:bg-white/20 text-gray-700 dark:text-gray-200 text-xs rounded-full shadow-sm border border-gray-200 dark:border-white/30"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
         <div className="flex justify-center mt-10">
           <a
