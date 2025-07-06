@@ -117,7 +117,7 @@ export default function PortfolioPage() {
         </div>
       </div>
       {/* Right: Detail Pane (Bottom on mobile) */}
-      <div className="w-full md:w-3/5 p-4 md:p-10 flex flex-col items-center justify-center bg-transparent relative">
+      <div className="w-full md:w-3/5 p-4 md:p-10 flex flex-col items-center justify-center bg-transparent relative overflow-y-auto max-h-screen">
         {selectedProject ? (
           <div className="w-full max-w-3xl p-4 md:p-8 rounded-3xl border border-white/30 shadow-2xl relative glass-detail-pane" style={{background: "rgba(30,30,40,0.45)", backdropFilter: "blur(32px)"}}>
             {/* Carousel */}
@@ -127,28 +127,28 @@ export default function PortfolioPage() {
                 navigation
                 thumbs={thumbsSwiper && thumbsSwiper.el ? { swiper: thumbsSwiper } : undefined}
                 className="rounded-2xl mb-4 shadow-lg w-full"
-                style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(12px)", maxHeight: "300px", minHeight: "180px" }}
+                style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(12px)", minHeight: "220px", maxHeight: "520px" }}
               >
                 {(selectedProject?.mediaUrls || []).map((url, idx) => (
                   <SwiperSlide key={idx}>
                     {isValidMediaUrl(url) && isVideo(url) && !videoErrorCarousel[idx] ? (
                       <video
                         src={url}
-                        className="w-full h-40 md:h-80 object-cover rounded-2xl"
+                        className="w-full aspect-video md:h-[420px] object-cover rounded-2xl"
                         muted
                         controls
                         onError={() => setVideoErrorCarousel(errs => ({ ...errs, [idx]: true }))}
                       />
                     ) : isValidMediaUrl(url) && isImage(url) ? (
-                      <img src={url} className="w-full h-40 md:h-80 object-cover rounded-2xl" alt="media" />
+                      <img src={url} className="w-full aspect-video md:h-[420px] object-cover rounded-2xl" alt="media" />
                     ) : (
-                      <div className="w-full h-40 md:h-80 flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
+                      <div className="w-full aspect-video md:h-[420px] flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
                     )}
                   </SwiperSlide>
                 ))}
               </Swiper>
             ) : (
-              <div className="w-full h-40 md:h-80 flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
+              <div className="w-full aspect-video md:h-[420px] flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
             )}
             {/* Media Gallery Row */}
             {(selectedProject?.mediaUrls || []).length > 1 && (
