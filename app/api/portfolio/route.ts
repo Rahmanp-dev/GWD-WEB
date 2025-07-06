@@ -4,14 +4,23 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   await connectToDB();
-  const { searchParams } = new URL(req.url);
-  const domain = searchParams.get("domain");
-  const featured = searchParams.get("featured");
-  const query: any = { status: "published" };
-  if (domain) query.domain = domain;
-  if (featured === "true") query.featured = true;
-  const projects = await Project.find(query).sort({ date: -1 });
-  return NextResponse.json(projects);
+  const url = new URL(req.url);
+  const domain = url.searchParams.get("domain");
+  const filter = domain && domain !== "all" ? { domain } : {};
+  const projects = await Project.find(filter).sort({ yearEnd: -1 });
+  return NextResponse.json(
+    projects.map((p) => ({
+      id: p._id,
+      title: p.title,
+      slug: p.slug,
+      domain: p.domain,
+      yearStart: p.yearStart,
+      yearEnd: p.yearEnd,
+      mediaUrls: p.mediaUrls,
+      descriptionMarkdown: p.descriptionMarkdown,
+      featured: p.featured,
+    }))
+  );
 }
 
 export async function POST(request: Request) {

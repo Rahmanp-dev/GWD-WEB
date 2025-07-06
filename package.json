@@ -31,10 +31,11 @@
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.58.1",
         "react-hot-toast": "^2.5.2",
+        "react-markdown": "^10.1.0",
         "react-quill": "^2.0.0",
         "react-tsparticles": "^2.12.2",
         "recharts": "^2.15.4",
-        "swiper": "^11.2.8",
+        "swiper": "^11.2.10",
         "swr": "^2.3.3",
         "tsparticles": "^2.12.0"
     },
