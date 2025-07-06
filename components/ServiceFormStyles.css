@@ -1,0 +1,130 @@
+/* ServiceFormStyles.css */
+
+/* We need to override the default styles from react-date-range */
+.rdrCalendarWrapper {
+    background-color: transparent !important;
+    color: #374151 !important;
+    /* gray-700 for text */
+}
+
+.rdrDateDisplayWrapper {
+    background-color: transparent !important;
+}
+
+.rdrDateDisplayItem {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.rdrDateDisplayItem input {
+    color: #1f2937 !important;
+    /* gray-800 for input text */
+}
+
+.rdrMonthAndYearWrapper {
+    background-color: transparent !important;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.rdrMonth,
+.rdrMonthAndYearPickers,
+.rdrNextPrevButton {
+    background-color: transparent !important;
+}
+
+.rdrNextPrevButton {
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.rdrNextPrevButton:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+.rdrMonthAndYearPickers select {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    color: #374151 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 8px;
+}
+
+.rdrDayNumber span {
+    color: #374151 !important;
+}
+
+.rdrDay:not(.rdrDayPassive) .rdrInRange~.rdrDayNumber span,
+.rdrDay:not(.rdrDayPassive) .rdrStartEdge~.rdrDayNumber span,
+.rdrDay:not(.rdrDayPassive) .rdrEndEdge~.rdrDayNumber span,
+.rdrDay:not(.rdrDayPassive) .rdrSelected~.rdrDayNumber span {
+    color: white !important;
+}
+
+.rdrDayPassive .rdrDayNumber span {
+    color: #d1d5db !important;
+    /* light gray for passive days */
+}
+
+.rdrDayHovered,
+.rdrDayActive {
+    border-color: #ef4444 !important;
+    /* Red-500 for hover */
+}
+
+.rdrInRange,
+.rdrStartEdge,
+.rdrEndEdge {
+    background: rgba(239, 68, 68, 0.4) !important;
+    /* Red-500 with opacity */
+}
+
+.rdrSelected {
+    background: #ef4444 !important;
+    /* Red-500 */
+}
+
+.shutter-anim .shutter-top {
+    transform: translateY(0);
+    animation: shutterDown 0.4s forwards;
+}
+
+.shutter-anim .shutter-bottom {
+    transform: translateY(0);
+    animation: shutterUp 0.4s forwards;
+}
+
+@keyframes shutterDown {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes shutterUp {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-freelancer {
+    animation: fadeInFreelancer 0.4s 0.4s both;
+}
+
+@keyframes fadeInFreelancer {
+    from {
+        opacity: 0;
+        transform: scaleY(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
