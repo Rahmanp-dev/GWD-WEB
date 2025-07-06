@@ -43,7 +43,7 @@ const NavItem = ({ item }: { item: (typeof navItems)[0] }) => (
 
 const navTabs = [
   { name: "Home", href: "/" },
-  { name: "Services", href: "/services" },
+ 
   { name: "Portfolio", href: "/portfolio" },
   { name: "Contact Us", href: "#contact" },
 ];
@@ -79,19 +79,20 @@ const FloatingNavbar = () => {
 
   return (
     <nav className="fixed top-8 left-0 right-0 z-[100] flex justify-center">
-      <div className="navbar-glass flex items-center gap-1 px-2 py-1 z-[101]">
+      <div className="glass-panel flex items-center gap-1 px-2 py-1 z-[101] border border-white/10 bg-black/40 backdrop-blur-xl">
         {navTabs.map((tab) => {
           const isActive = activeHash === tab.href;
           return (
             <a
               key={tab.name}
               href={tab.href}
-              className={`navbar-tab${isActive ? " active" : ""}`}
+              className={`navbar-tab group relative transition-colors duration-200${isActive ? " active" : ""}`}
               aria-current={isActive ? "page" : undefined}
               style={{ minWidth: 120, textAlign: "center", margin: "0 0.25rem" }}
               onClick={tab.name === "Services" ? handleTabClick(tab) : undefined}
             >
               {tab.name}
+              <span className="absolute left-1/2 -translate-x-1/2 bottom-1 h-[3px] w-0 group-hover:w-3/5 bg-gradient-to-r from-red-400 to-red-600 rounded transition-all duration-300" />
             </a>
           );
         })}
