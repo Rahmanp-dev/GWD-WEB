@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import BackgroundSelector from "../components/BackgroundSelector";
 import FloatingNavbar from "../components/ui/FloatingNavbar";
 import TopLeftLogo from "../components/ui/TopRightLogo";
-import ThemeToggle from "../components/ui/ThemeToggle";
+
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -41,10 +41,10 @@ export default function RootLayout({
               // Debug background loading
               console.log('Layout: BackgroundSelector should be loading...');
               
-              // Theme management
+              // Force dark mode
               (function() {
-                const theme = localStorage.getItem('theme') || 'dark';
-                document.documentElement.classList.toggle('dark', theme === 'dark');
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
               })();
             `,
           }}
@@ -67,7 +67,7 @@ export default function RootLayout({
         <BackgroundSelector />
         <TopLeftLogo />
         <FloatingNavbar />
-        <ThemeToggle />
+
         <div className="relative z-[1]">{children}</div>
       </body>
     </html>

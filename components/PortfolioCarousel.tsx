@@ -39,7 +39,7 @@ const PortfolioCarousel = () => {
       aria-label="Featured Projects Carousel"
     >
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-red-600 dark:text-red-400 mb-4">
+        <h2 className="text-3xl font-bold text-center text-red-100 dark:text-red-100 mb-4">
           OUR PORTFOLIO
         </h2>
         <p className="text-center text-gray-800 dark:text-gray-200 mb-12">
@@ -52,7 +52,7 @@ const PortfolioCarousel = () => {
           spaceBetween={30}
           slidesPerView={1}
           breakpoints={{
-            640: { slidesPerView: 1 },
+            480: { slidesPerView: 1 },
             768: { slidesPerView: 2 },
             1024: { slidesPerView: 3 },
           }}
@@ -69,7 +69,7 @@ const PortfolioCarousel = () => {
                 className="flex justify-center"
               >
                 <div className="max-w-md w-full bg-white/70 dark:bg-white/10 rounded-3xl shadow-xl border border-white/30 dark:border-white/20 glass-panel overflow-hidden flex flex-col items-center mx-auto relative">
-                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-white shadow-md z-10">
+                  <span className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-white shadow-md z-10">
                     {item.domain
                       ?.replace("3d", "3D Animation")
                       .replace("web", "Web")
@@ -90,8 +90,8 @@ const PortfolioCarousel = () => {
                       <img
                         src={media}
                         alt={item.title + " preview"}
-                        className="w-full h-64 object-cover rounded-t-3xl"
-                        style={{ maxHeight: "16rem" }}
+                        className="w-full h-40 md:h-64 object-cover rounded-t-3xl"
+                        style={{ maxHeight: "16rem", objectFit: 'cover' }}
                       />
                     ) : (
                       <div className="w-full h-64 bg-gray-200 rounded-t-3xl flex items-center justify-center" role="img" aria-label="No media available" />
@@ -99,8 +99,8 @@ const PortfolioCarousel = () => {
                   ) : (
                     <div className="w-full h-64 bg-gray-200 rounded-t-3xl flex items-center justify-center" role="img" aria-label="No media available" />
                   )}
-                  <div className="p-6 w-full">
-                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white text-center">
+                  <div className="p-4 md:p-6 w-full">
+                    <h3 className="text-lg md:text-xl font-bold mb-2 text-gray-900 dark:text-white text-center">
                       {item.title}
                     </h3>
                     <div className="flex flex-wrap gap-2 mb-3 justify-center">

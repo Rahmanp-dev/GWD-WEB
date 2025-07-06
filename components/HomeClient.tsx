@@ -36,7 +36,7 @@ export default function HomeClient() {
     <main>
       <HeroWheel onSelect={handleServiceSelect} />
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2 md:px-4">
         {service && selectedService && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -57,7 +57,9 @@ export default function HomeClient() {
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
       >
-        <PortfolioCarousel />
+        <div className="container mx-auto px-2 md:px-4">
+          <PortfolioCarousel />
+        </div>
       </motion.div>
 
       <motion.div
@@ -66,7 +68,9 @@ export default function HomeClient() {
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
       >
-        <PartnersCarousel />
+        <div className="container mx-auto px-2 md:px-4">
+          <PartnersCarousel />
+        </div>
       </motion.div>
 
       <div className="container mx-auto px-4">

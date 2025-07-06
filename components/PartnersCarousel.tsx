@@ -31,8 +31,13 @@ const PartnersCarousel = () => {
         </p>
         <Swiper
           modules={[Autoplay]}
-          spaceBetween={50}
-          slidesPerView={5}
+          spaceBetween={16}
+          slidesPerView={3}
+          breakpoints={{
+            480: { slidesPerView: 4, spaceBetween: 20 },
+            768: { slidesPerView: 5, spaceBetween: 32 },
+            1024: { slidesPerView: 6, spaceBetween: 50 },
+          }}
           loop={true}
           autoplay={{
             delay: 2500,
@@ -44,7 +49,7 @@ const PartnersCarousel = () => {
               key={index}
               className="flex items-center justify-center"
             >
-              <div className="relative h-20 w-40 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+              <div className="relative h-12 w-24 md:h-20 md:w-40 md:grayscale md:opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 mx-2">
                 <Image
                   src={partner.src}
                   alt={partner.alt}
