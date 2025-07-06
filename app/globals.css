@@ -520,3 +520,106 @@ textarea::placeholder {
 .dark .toast {
     @apply bg-transparent border-white/20 text-white;
 }
+
+/* Enhanced Glassmorphism for navbar with red glow */
+.navbar-glass {
+  position: relative;
+  background: linear-gradient(120deg, rgba(18,18,18,0.92) 60%, rgba(40,0,0,0.82) 100%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border-radius: 2rem;
+  box-shadow: 0 2px 32px 4px rgba(229, 57, 53, 0.38), 0 1.5px 8px 0 rgba(0,0,0,0.22), 0 0 0 2px rgba(229,57,53,0.10) inset, 0 0 32px 2px rgba(255,0,0,0.10) inset;
+  border: 1.5px solid rgba(229,57,53,0.18);
+  transition: box-shadow 0.3s, background 0.3s;
+  overflow: hidden;
+}
+
+.dark .navbar-glass {
+  background: linear-gradient(120deg, rgba(10,10,10,0.98) 60%, rgba(60,0,0,0.88) 100%);
+  box-shadow: 0 4px 40px 8px rgba(229, 57, 53, 0.45), 0 2px 12px 0 rgba(0,0,0,0.32), 0 0 0 2.5px rgba(229,57,53,0.18) inset, 0 0 40px 4px rgba(229,57,53,0.12) inset;
+  border: 2px solid rgba(229,57,53,0.22);
+}
+
+.navbar-glass::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  top: 0;
+  width: 80%;
+  height: 60%;
+  pointer-events: none;
+  background: radial-gradient(ellipse at top, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 60%, transparent 100%);
+  opacity: 0.7;
+  filter: blur(2px);
+  z-index: 1;
+  transition: opacity 0.3s;
+}
+
+.navbar-glass:hover::before {
+  opacity: 1;
+}
+
+.navbar-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2rem;
+  pointer-events: none;
+  border: 2px solid transparent;
+  background: linear-gradient(120deg, rgba(255,255,255,0.18), rgba(229,57,53,0.10) 80%, rgba(255,255,255,0.08));
+  mask-image: linear-gradient(white, white);
+  -webkit-mask-image: linear-gradient(white, white);
+  z-index: 2;
+  mix-blend-mode: lighten;
+  opacity: 0.7;
+}
+
+.navbar-tab {
+  position: relative;
+  color: #fff;
+  font-weight: 500;
+  padding: 0.5rem 2.5rem;
+  border-radius: 2rem;
+  transition: color 0.2s, background 0.2s;
+}
+
+.navbar-tab.active, .navbar-tab[aria-current="page"] {
+  color: #ff6a3d;
+  text-shadow: 0 0 8px #e53e3e99, 0 0 2px #ff6a3d;
+}
+
+.navbar-tab.active::after, .navbar-tab[aria-current="page"]::after {
+  content: "";
+  display: block;
+  margin: 0 auto;
+  width: 60%;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #ff6a3d 0%, #e53e3e 100%);
+  box-shadow: 0 0 12px 2px #e53e3e66;
+  margin-top: 0.25rem;
+  animation: navbar-underline-in 0.3s;
+}
+
+.navbar-tab:hover {
+  color: #e53e3e;
+  background: rgba(229,57,53,0.08);
+}
+
+.dark .navbar-tab {
+  color: #fff;
+}
+
+.dark .navbar-tab.active, .dark .navbar-tab[aria-current="page"] {
+  color: #ff6a3d;
+  text-shadow: 0 0 12px #e53e3e, 0 0 2px #ff6a3d;
+}
+
+.dark .navbar-tab:hover {
+  color: #ff6a3d;
+  background: rgba(229,57,53,0.12);
+}
+
+@keyframes navbar-underline-in {
+  from { width: 0; opacity: 0; }
+  to { width: 60%; opacity: 1; }
+}

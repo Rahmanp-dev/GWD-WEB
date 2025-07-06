@@ -8,6 +8,10 @@ import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
+const isVideo = (url: string) => /\.(mp4|webm|ogg)$/i.test(url);
+const isImage = (url: string) => /\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(url);
+const isValidMediaUrl = (url: string) => url && typeof url === 'string' && url.trim() !== '' && url !== '/' && url !== '#';
+
 export default function PortfolioDomainPage({
   params,
 }: {
@@ -39,13 +43,13 @@ export default function PortfolioDomainPage({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold capitalize">{domain} Projects</h1>
+      <div className="flex justify-between items-center mb-6 bg-[#18181c]/90 px-6 py-4 rounded-2xl shadow border border-white/10">
+        <h1 className="text-3xl font-bold capitalize text-white">{domain} Projects</h1>
         <Link href={`/admin/portfolio/${domain}/new`}>
-          <NeonButton>Add Project</NeonButton>
+          <NeonButton className="bg-red-600 hover:bg-red-700 text-white shadow-lg">Add Project</NeonButton>
         </Link>
       </div>
-      <GlassCard className="bg-white/10 dark:bg-[#18181c]/80 backdrop-blur-xl border border-red-500/30 shadow-xl">
+      <GlassCard className="bg-[#18181c]/80 backdrop-blur-xl border border-white/20 shadow-xl">
         <div className="flex gap-4 mb-4 items-center">
           <label htmlFor="search" className="sr-only">
             Search by title
@@ -105,7 +109,7 @@ export default function PortfolioDomainPage({
             role="table"
             aria-label="Projects table"
           >
-            <thead className="bg-gray-50">
+            <thead className="bg-[#23232b]/80">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
                   Thumbnail
@@ -127,27 +131,23 @@ export default function PortfolioDomainPage({
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-white/10">
               {filtered.map((project: any) => (
                 <tr
                   key={project._id}
                   tabIndex={0}
                   role="row"
-                  className="focus:outline-none focus:ring-2 focus:ring-pink-300"
+                  className="focus:outline-none focus:ring-2 focus:ring-pink-300 hover:bg-white/5 transition"
                 >
                   <td className="px-4 py-2">
-                    {project.mediaUrls && project.mediaUrls[0] ? (
-                      <img
-                        src={project.mediaUrls[0]}
-                        alt={project.title + " thumbnail"}
-                        className="w-16 h-16 object-cover rounded-lg border-2 border-red-500/40 shadow"
-                      />
-                    ) : project.images && project.images[0] ? (
-                      <img
-                        src={project.images[0]}
-                        alt={project.title + " thumbnail"}
-                        className="w-16 h-16 object-cover rounded-lg border"
-                      />
+                    {project.mediaUrls && project.mediaUrls[0] && isValidMediaUrl(project.mediaUrls[0]) ? (
+                      isImage(project.mediaUrls[0]) ? (
+                        <img src={project.mediaUrls[0]} alt={project.title + ' thumbnail'} className="w-16 h-16 object-cover rounded-lg border-2 border-red-500/40 shadow" />
+                      ) : isVideo(project.mediaUrls[0]) ? (
+                        <video src={project.mediaUrls[0]} className="w-16 h-16 object-cover rounded-lg border-2 border-red-500/40 shadow bg-black/60" muted playsInline preload="metadata" controls={false} />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 border">No Media</div>
+                      )
                     ) : (
                       <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 border">No Media</div>
                     )}
