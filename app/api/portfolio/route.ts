@@ -6,7 +6,12 @@ export async function GET(req: NextRequest) {
   await connectToDB();
   const url = new URL(req.url);
   const domain = url.searchParams.get("domain");
-  const filter = domain && domain !== "all" ? { domain } : {};
+  const featured = url.searchParams.get("featured");
+  const status = url.searchParams.get("status");
+  const filter: any = {};
+  if (domain && domain !== "all") filter.domain = domain;
+  if (featured === "true") filter.featured = true;
+  if (status) filter.status = status;
   const projects = await Project.find(filter).sort({ yearEnd: -1 });
   return NextResponse.json(
     projects.map((p) => ({

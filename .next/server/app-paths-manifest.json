@@ -1,8 +1,9 @@
 {
-  "/portfolio/page": "app/portfolio/page.js",
   "/page": "app/page.js",
+  "/portfolio/page": "app/portfolio/page.js",
   "/api/portfolio/route": "app/api/portfolio/route.js",
-  "/admin/dashboard/page": "app/admin/dashboard/page.js",
-  "/admin/portfolio/[domain]/page": "app/admin/portfolio/[domain]/page.js",
-  "/admin/portfolio/[domain]/new/page": "app/admin/portfolio/[domain]/new/page.js"
+  "/api/admin/requests/route": "app/api/admin/requests/route.js",
+  "/admin/clients/page": "app/admin/clients/page.js",
+  "/admin/inquiries/page": "app/admin/inquiries/page.js",
+  "/admin/projects/page": "app/admin/projects/page.js"
 }

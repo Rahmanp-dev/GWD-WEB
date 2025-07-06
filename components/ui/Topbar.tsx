@@ -13,10 +13,10 @@ const Topbar = () => {
   const title = getTitleFromPath(pathname || "");
 
   return (
-    <header className="flex items-center justify-between p-4 bg-white border-b h-16">
-      <h1 className="text-2xl font-semibold text-gray-800">{title}</h1>
+    <header className="glass-panel flex items-center justify-between p-4 h-16 shadow-lg border-b border-white/20 dark:border-white/20">
+      <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">{title}</h1>
       <div className="flex items-center space-x-3">
-        <span className="text-gray-600 font-medium">Admin User</span>
+        <span className="text-gray-700 dark:text-gray-200 font-medium">Admin User</span>
         <div className="relative">
           <button className="flex items-center space-x-2">
             <img

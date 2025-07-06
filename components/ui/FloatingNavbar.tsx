@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { Bookmark, GitFork, Home, PlusSquare, Terminal, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import React from "react";
 
 const navItems = [
   { name: "Home", icon: Home, href: "/", target: "" },
@@ -38,41 +41,62 @@ const NavItem = ({ item }: { item: (typeof navItems)[0] }) => (
   </Link>
 );
 
+const navTabs = [
+  { name: "Home", href: "/" },
+  { name: "Services", href: "/services" },
+  { name: "Portfolio", href: "/portfolio" },
+  { name: "Contact Us", href: "#contact" },
+];
+
 const FloatingNavbar = () => {
+  const [activeHash, setActiveHash] = useState("#about");
+  const router = useRouter();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setActiveHash(window.location.hash || "#about");
+    };
+    window.addEventListener("hashchange", onHashChange);
+    onHashChange();
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  const handleTabClick = (tab: { name: string; href: string }) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (tab.name === "Services") {
+      e.preventDefault();
+      if (pathname !== "/") {
+        router.push("/#service-form");
+      } else {
+        const el = document.getElementById("service-form");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+          setActiveHash("#service-form");
+        }
+      }
+    }
+  };
+
   return (
-    <motion.nav
-      initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeInOut" }}
-      className="fixed bottom-8 inset-x-0 z-[100] flex justify-center"
-    >
-      <div className="flex items-center gap-4 rounded-full glass-panel p-3 shadow-2xl">
-        {navItems.slice(0, 3).map((item) => (
-          <NavItem key={item.name} item={item} />
-        ))}
-
-        <Link href="/admin">
-          <motion.div
-            title="Dashboard"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="group relative flex h-16 w-16 cursor-pointer items-center justify-center rounded-full glass-panel"
-          >
-            <Image
-              src="/logo.png"
-              alt="Dashboard"
-              width={32}
-              height={32}
-              className="transition-transform duration-300 group-hover:scale-110"
-            />
-          </motion.div>
-        </Link>
-
-        {navItems.slice(3).map((item) => (
-          <NavItem key={item.name} item={item} />
-        ))}
+    <nav className="fixed top-8 left-0 right-0 z-[100] flex justify-center">
+      <div className="navbar-glass flex items-center gap-1 px-2 py-1 z-[101]">
+        {navTabs.map((tab) => {
+          const isActive = activeHash === tab.href;
+          return (
+            <a
+              key={tab.name}
+              href={tab.href}
+              className={`navbar-tab${isActive ? " active" : ""}`}
+              aria-current={isActive ? "page" : undefined}
+              style={{ minWidth: 120, textAlign: "center", margin: "0 0.25rem" }}
+              onClick={tab.name === "Services" ? handleTabClick(tab) : undefined}
+            >
+              {tab.name}
+            </a>
+          );
+        })}
       </div>
-    </motion.nav>
+    </nav>
   );
 };
 
