@@ -214,10 +214,10 @@ const ServiceForm = ({
   return (
     <section
       id="service-form"
-      className="py-20 bg-white/10 dark:bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-16"
+      className="py-8 md:py-20 bg-white/10 dark:bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-8 md:my-16 mx-2"
     >
-      <div className="max-w-4xl mx-auto px-8">
-        <h2 className="text-4xl font-bold text-center mb-10 text-red-600 dark:text-red-400">
+      <div className="max-w-2xl md:max-w-4xl mx-auto px-2 md:px-8">
+        <h2 className="text-2xl md:text-4xl font-bold text-center mb-6 md:mb-10 text-red-100 dark:text-red-100">
           {isFreelancer ? (
             "Freelancer Onboarding"
           ) : (
@@ -237,7 +237,7 @@ const ServiceForm = ({
           {!isFreelancer && !shutter && (
             <form
               onSubmit={handleSubmit}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/60 dark:bg-white/10 rounded-xl p-8 shadow-lg relative animate-fade-in"
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 bg-white/60 dark:bg-white/10 rounded-xl p-4 md:p-8 shadow-lg relative animate-fade-in"
             >
               <input
                 ref={firstInputRef}
@@ -292,10 +292,10 @@ const ServiceForm = ({
                 rows={4}
               />
               <div className="md:col-span-2">
-                <h3 className="text-lg font-semibold mb-2 text-center text-black dark:text-white">
+                <h3 className="text-base md:text-lg font-semibold mb-2 text-center text-black dark:text-white">
                   Project Timeline
                 </h3>
-                <div className="flex flex-col md:flex-row md:items-center gap-4 bg-white/10 dark:bg-white/10 p-4 rounded-lg border border-white/20 dark:border-white/20">
+                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 bg-white/10 dark:bg-white/10 p-2 md:p-4 rounded-lg border border-white/20 dark:border-white/20">
                   <div className="flex-1 flex flex-col items-center">
                     <span className="text-xs text-gray-600 dark:text-gray-300 mb-1">
                       Start Date
@@ -325,7 +325,7 @@ const ServiceForm = ({
               </div>
               <div className="md:col-span-2 flex flex-col items-end mt-4">
                 {!isFreelancerControlled && (
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                  <label className="mb-2 flex items-center gap-2 text-xs md:text-sm font-medium text-black dark:text-white">
                     Want to work with GWD?
                     <input
                       type="checkbox"
@@ -337,7 +337,7 @@ const ServiceForm = ({
                 )}
                 <button
                   type="submit"
-                  className="mt-2 px-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition-transform"
+                  className="mt-2 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition-transform w-full md:w-auto text-base md:text-lg"
                   style={{ alignSelf: "flex-end" }}
                   disabled={isSubmitting}
                 >
@@ -349,7 +349,7 @@ const ServiceForm = ({
           {isFreelancer && !shutter && (
             <form
               onSubmit={handleSubmit}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/60 dark:bg-white/10 rounded-xl p-8 shadow-lg relative animate-fade-in-freelancer"
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 bg-white/60 dark:bg-white/10 rounded-xl p-4 md:p-8 shadow-lg relative animate-fade-in-freelancer"
             >
               <div>
                 <label className="block font-semibold mb-2 text-black dark:text-white">
@@ -521,7 +521,7 @@ const ServiceForm = ({
               </div>
               <div className="md:col-span-2 flex flex-col items-end mt-4">
                 {!isFreelancerControlled && (
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                  <label className="mb-2 flex items-center gap-2 text-xs md:text-sm font-medium text-black dark:text-white">
                     Are you a freelancer?
                     <input
                       type="checkbox"
@@ -533,7 +533,7 @@ const ServiceForm = ({
                 )}
                 <button
                   type="submit"
-                  className="mt-2 px-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition-transform"
+                  className="mt-2 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition-transform w-full md:w-auto text-base md:text-lg"
                   style={{ alignSelf: "flex-end" }}
                   disabled={isSubmitting}
                 >

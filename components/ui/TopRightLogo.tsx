@@ -16,14 +16,14 @@ const TopLeftLogo = () => {
         <motion.div
           whileHover={{ scale: 1.1, rotate: -5 }}
           whileTap={{ scale: 0.95 }}
-          className="p-3 glass-panel"
+          className="p-1 md:p-3 glass-panel shadow-md"
         >
           <Image
             src="/logo.png"
             alt="GWD Global Logo"
-            width={60}
-            height={60}
-            className="rounded-full"
+            width={56}
+            height={56}
+            className="rounded-full w-10 h-10 md:w-14 md:h-14"
           />
         </motion.div>
       </Link>

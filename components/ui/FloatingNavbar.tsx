@@ -43,19 +43,19 @@ const NavItem = ({ item }: { item: (typeof navItems)[0] }) => (
 
 const navTabs = [
   { name: "Home", href: "/" },
- 
   { name: "Portfolio", href: "/portfolio" },
   { name: "Contact Us", href: "#contact" },
 ];
 
 const FloatingNavbar = () => {
-  const [activeHash, setActiveHash] = useState("#about");
+  const [activeHash, setActiveHash] = useState("");
   const router = useRouter();
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
+  const rawPathname = usePathname();
+  const pathname = typeof rawPathname === 'string' ? rawPathname : '/';
 
   useEffect(() => {
     const onHashChange = () => {
-      setActiveHash(window.location.hash || "#about");
+      setActiveHash(window.location.hash || "");
     };
     window.addEventListener("hashchange", onHashChange);
     onHashChange();
@@ -78,26 +78,62 @@ const FloatingNavbar = () => {
   };
 
   return (
-    <nav className="fixed top-8 left-0 right-0 z-[100] flex justify-center">
-      <div className="glass-panel flex items-center gap-1 px-2 py-1 z-[101] border border-white/10 bg-black/40 backdrop-blur-xl">
-        {navTabs.map((tab) => {
-          const isActive = activeHash === tab.href;
-          return (
-            <a
-              key={tab.name}
-              href={tab.href}
-              className={`navbar-tab group relative transition-colors duration-200${isActive ? " active" : ""}`}
-              aria-current={isActive ? "page" : undefined}
-              style={{ minWidth: 120, textAlign: "center", margin: "0 0.25rem" }}
-              onClick={tab.name === "Services" ? handleTabClick(tab) : undefined}
-            >
-              {tab.name}
-              <span className="absolute left-1/2 -translate-x-1/2 bottom-1 h-[3px] w-0 group-hover:w-3/5 bg-gradient-to-r from-red-400 to-red-600 rounded transition-all duration-300" />
-            </a>
-          );
-        })}
-      </div>
-    </nav>
+    <>
+      {/* Mobile Bottom Navbar */}
+      <nav className="fixed bottom-0 left-0 right-0 z-[100] flex justify-center md:hidden px-2 pb-2">
+        <div className="glass-panel flex items-center gap-1 px-2 py-1 z-[101] border border-white/10 bg-black/40 backdrop-blur-xl w-full max-w-md rounded-2xl overflow-x-auto scrollbar-hide shadow-md mx-2">
+          {navTabs.map((tab) => {
+            let isActive = false;
+            if (tab.href.startsWith("#")) {
+              isActive = activeHash === tab.href;
+            } else if (tab.href === "/") {
+              isActive = pathname === "/";
+            } else {
+              isActive = pathname.startsWith(tab.href);
+            }
+            return (
+              <a
+                key={tab.name}
+                href={tab.href}
+                className={`navbar-tab group relative transition-colors duration-200 whitespace-nowrap text-sm px-3 py-2${isActive ? " active" : ""}`}
+                aria-current={isActive ? "page" : undefined}
+                style={{ minWidth: 100, textAlign: "center", margin: "0 0.15rem" }}
+                onClick={tab.name === "Services" ? handleTabClick(tab) : undefined}
+              >
+                {tab.name}
+              </a>
+            );
+          })}
+        </div>
+      </nav>
+      {/* Desktop Top Navbar */}
+      <nav className="hidden md:flex fixed top-4 left-0 right-0 z-[100] justify-center px-4">
+        <div className="glass-panel flex items-center gap-0 px-2 py-1 z-[101] border border-white/10 bg-black/40 backdrop-blur-xl rounded-2xl overflow-hidden shadow-lg">
+          {navTabs.map((tab) => {
+            let isActive = false;
+            if (tab.href.startsWith("#")) {
+              isActive = activeHash === tab.href;
+            } else if (tab.href === "/") {
+              isActive = pathname === "/";
+            } else {
+              isActive = pathname.startsWith(tab.href);
+            }
+            return (
+              <a
+                key={tab.name}
+                href={tab.href}
+                className={`navbar-tab group relative transition-colors duration-200 whitespace-nowrap text-sm px-4 py-2${isActive ? " active" : ""}`}
+                aria-current={isActive ? "page" : undefined}
+                style={{ minWidth: 80, textAlign: "center" }}
+                onClick={tab.name === "Services" ? handleTabClick(tab) : undefined}
+              >
+                {tab.name}
+              </a>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 };
 

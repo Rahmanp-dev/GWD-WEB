@@ -63,38 +63,38 @@ export default function PortfolioPage() {
   }, [selectedDomain]);
 
   return (
-    <div className="flex min-h-screen w-full bg-transparent bg-dot-red/[0.2] bg-fixed bg-cover">
-      {/* Left: Grid & Filters */}
+    <div className="flex min-h-screen w-full bg-transparent bg-dot-red/[0.2] bg-fixed bg-cover flex-col md:flex-row">
+      {/* Left: Grid & Filters (Top on mobile) */}
       <div
-        className="w-2/5 p-8 flex flex-col border-r border-2 border-white/20 shadow-2xl glass-left-pane"
+        className="w-full md:w-2/5 p-4 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-2 border-white/20 shadow-2xl glass-left-pane"
         style={{ background: "rgba(30,30,40,0.35)", backdropFilter: "blur(28px)" }}
       >
-        <div className="flex items-center justify-center mb-8">
-          <h1 className="text-3xl font-bold uppercase tracking-wide text-red-500 drop-shadow-glow">Portfolio</h1>
+        <div className="flex items-center justify-center mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-wide text-red-500 drop-shadow-glow">Portfolio</h1>
         </div>
-        <div className="flex flex-wrap gap-2 mb-8 justify-center overflow-x-auto">
+        <div className="flex flex-wrap gap-2 mb-6 md:mb-8 justify-center overflow-x-auto">
           {DOMAIN_TABS.map((tab) => (
             <button
               key={tab.value}
               onClick={() => setSelectedDomain(tab.value)}
-              className={`px-4 py-1.5 rounded-full font-semibold text-sm shadow transition-all duration-150 border
+              className={`px-4 py-1.5 rounded-full font-semibold text-xs md:text-sm shadow transition-all duration-150 border
                 ${selectedDomain === tab.value
                   ? "bg-red-600 text-white border-red-600 drop-shadow-glow"
                   : "bg-white/10 text-gray-200 border-white/20 hover:bg-red-500/70 hover:text-white hover:border-red-500/70"}
               `}
-              style={{ minWidth: '90px' }}
+              style={{ minWidth: '80px' }}
             >
               {tab.label}
             </button>
           ))}
         </div>
         <div
-          className="grid grid-cols-2 md:grid-cols-2 gap-4 flex-1 overflow-y-auto min-h-0 min-w-0"
+          className="grid grid-cols-2 gap-3 md:grid-cols-2 flex-1 overflow-y-auto min-h-0 min-w-0"
         >
           {projects.map((project) => (
             <div
               key={project.id}
-              className={`relative rounded-2xl cursor-pointer group transition-all duration-200 border border-white/20 shadow-xl hover:scale-105 hover:shadow-red-500/40 hover:border-red-500/80 ${selectedProject?.id === project.id ? "ring-2 ring-red-500" : ""} h-64 min-h-0 min-w-0 flex flex-col justify-between`}
+              className={`relative rounded-2xl cursor-pointer group transition-all duration-200 border border-white/20 shadow-xl hover:scale-105 hover:shadow-red-500/40 hover:border-red-500/80 ${selectedProject?.id === project.id ? "ring-2 ring-red-500" : ""} h-40 md:h-64 min-h-0 min-w-0 flex flex-col justify-between`}
               style={{ background: "#18181c" }}
               onClick={() => setSelectedProject(project)}
             >
@@ -109,17 +109,17 @@ export default function PortfolioPage() {
               ) : (
                 <div className="w-full h-2/3 flex items-center justify-center bg-white/5 text-gray-400 rounded-2xl">No Media</div>
               )}
-              <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-center text-sm font-bold rounded-b-2xl py-2">
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-center text-xs md:text-sm font-bold rounded-b-2xl py-2">
                 {project.title}
               </div>
             </div>
           ))}
         </div>
       </div>
-      {/* Right: Detail Pane */}
-      <div className="w-3/5 p-10 flex flex-col items-center justify-center bg-transparent relative">
+      {/* Right: Detail Pane (Bottom on mobile) */}
+      <div className="w-full md:w-3/5 p-4 md:p-10 flex flex-col items-center justify-center bg-transparent relative">
         {selectedProject ? (
-          <div className="w-full max-w-3xl p-8 rounded-3xl border border-white/30 shadow-2xl relative glass-detail-pane" style={{background: "rgba(30,30,40,0.45)", backdropFilter: "blur(32px)"}}>
+          <div className="w-full max-w-3xl p-4 md:p-8 rounded-3xl border border-white/30 shadow-2xl relative glass-detail-pane" style={{background: "rgba(30,30,40,0.45)", backdropFilter: "blur(32px)"}}>
             {/* Carousel */}
             {(selectedProject?.mediaUrls || []).length > 0 ? (
               <Swiper
@@ -127,34 +127,34 @@ export default function PortfolioPage() {
                 navigation
                 thumbs={thumbsSwiper && thumbsSwiper.el ? { swiper: thumbsSwiper } : undefined}
                 className="rounded-2xl mb-4 shadow-lg w-full"
-                style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(12px)", maxHeight: "500px" }}
+                style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(12px)", maxHeight: "300px", minHeight: "180px" }}
               >
                 {(selectedProject?.mediaUrls || []).map((url, idx) => (
                   <SwiperSlide key={idx}>
                     {isValidMediaUrl(url) && isVideo(url) && !videoErrorCarousel[idx] ? (
                       <video
                         src={url}
-                        className="w-full h-80 object-cover rounded-2xl"
+                        className="w-full h-40 md:h-80 object-cover rounded-2xl"
                         muted
                         controls
                         onError={() => setVideoErrorCarousel(errs => ({ ...errs, [idx]: true }))}
                       />
                     ) : isValidMediaUrl(url) && isImage(url) ? (
-                      <img src={url} className="w-full h-80 object-cover rounded-2xl" alt="media" />
+                      <img src={url} className="w-full h-40 md:h-80 object-cover rounded-2xl" alt="media" />
                     ) : (
-                      <div className="w-full h-80 flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
+                      <div className="w-full h-40 md:h-80 flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
                     )}
                   </SwiperSlide>
                 ))}
               </Swiper>
             ) : (
-              <div className="w-full h-80 flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
+              <div className="w-full h-40 md:h-80 flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
             )}
             {/* Media Gallery Row */}
             {(selectedProject?.mediaUrls || []).length > 1 && (
-              <div className="flex flex-row gap-3 justify-center items-center mt-6 mb-6">
+              <div className="flex flex-row gap-2 md:gap-3 justify-center items-center mt-4 md:mt-6 mb-4 md:mb-6 overflow-x-auto">
                 {(selectedProject?.mediaUrls || []).map((url, idx) => (
-                  <div key={idx} className="rounded-lg overflow-hidden border border-white/20 bg-black/30 w-20 h-14 flex items-center justify-center">
+                  <div key={idx} className="rounded-lg overflow-hidden border border-white/20 bg-black/30 w-14 h-10 md:w-20 md:h-14 flex items-center justify-center">
                     {isValidMediaUrl(url) && isVideo(url) ? (
                       <video src={url} className="w-full h-full object-cover bg-black/60" muted playsInline preload="metadata" controls={false} />
                     ) : isValidMediaUrl(url) && isImage(url) ? (
@@ -167,7 +167,7 @@ export default function PortfolioPage() {
               </div>
             )}
             {/* Details */}
-            <h2 className="text-2xl text-white font-bold mb-1">{selectedProject.title}</h2>
+            <h2 className="text-lg md:text-2xl text-white font-bold mb-1">{selectedProject.title}</h2>
             <div className="prose prose-invert max-w-none mb-2">
               <ReactMarkdown>
                 {stripHtmlTags(selectedProject.descriptionMarkdown)}
@@ -175,7 +175,7 @@ export default function PortfolioPage() {
             </div>
           </div>
         ) : (
-          <div className="text-gray-400 text-xl">Select a project to view details.</div>
+          <div className="text-gray-400 text-lg md:text-xl">Select a project to view details.</div>
         )}
       </div>
       <style jsx global>{`
