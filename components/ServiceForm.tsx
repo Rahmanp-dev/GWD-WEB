@@ -25,9 +25,11 @@ const inputBase =
 const ServiceForm = ({
   service,
   serviceLabel,
+  isFreelancer: isFreelancerProp,
 }: {
   service: string;
   serviceLabel: string;
+  isFreelancer?: boolean;
 }) => {
   const [formData, setFormData] = useState<RequestPayload>({
     name: "",
@@ -47,7 +49,6 @@ const ServiceForm = ({
     },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isFreelancer, setIsFreelancer] = useState(false);
   const [shutter, setShutter] = useState(false);
   const domainOptions = [
     "Full Stack Web Development (MERN / Next.js)",
@@ -76,6 +77,8 @@ const ServiceForm = ({
   });
   const fileInputRef = useRef(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
+  const [isFreelancer, setIsFreelancer] = useState(isFreelancerProp ?? false);
+  const isFreelancerControlled = typeof isFreelancerProp === 'boolean';
 
   useEffect(() => {
     firstInputRef.current?.focus();
@@ -200,6 +203,7 @@ const ServiceForm = ({
 
   // Shutter animation logic
   const handleFreelancerToggle = () => {
+    if (isFreelancerControlled) return;
     setShutter(true);
     setTimeout(() => {
       setIsFreelancer((v) => !v);
@@ -320,15 +324,17 @@ const ServiceForm = ({
                 </div>
               </div>
               <div className="md:col-span-2 flex flex-col items-end mt-4">
-                <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                  Want to work with GWD?
-                  <input
-                    type="checkbox"
-                    checked={isFreelancer}
-                    onChange={handleFreelancerToggle}
-                    className="accent-red-500 w-5 h-5"
-                  />
-                </label>
+                {!isFreelancerControlled && (
+                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                    Want to work with GWD?
+                    <input
+                      type="checkbox"
+                      checked={isFreelancer}
+                      onChange={handleFreelancerToggle}
+                      className="accent-red-500 w-5 h-5"
+                    />
+                  </label>
+                )}
                 <button
                   type="submit"
                   className="mt-2 px-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition-transform"
@@ -514,15 +520,17 @@ const ServiceForm = ({
                 />
               </div>
               <div className="md:col-span-2 flex flex-col items-end mt-4">
-                <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                  Are you a freelancer?
-                  <input
-                    type="checkbox"
-                    checked={isFreelancer}
-                    onChange={handleFreelancerToggle}
-                    className="accent-red-500 w-5 h-5"
-                  />
-                </label>
+                {!isFreelancerControlled && (
+                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                    Are you a freelancer?
+                    <input
+                      type="checkbox"
+                      checked={isFreelancer}
+                      onChange={handleFreelancerToggle}
+                      className="accent-red-500 w-5 h-5"
+                    />
+                  </label>
+                )}
                 <button
                   type="submit"
                   className="mt-2 px-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition-transform"
