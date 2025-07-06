@@ -1,5 +1,8 @@
 {
+  "/portfolio/page": "app/portfolio/page.js",
+  "/api/admin/projects/route": "app/api/admin/projects/route.js",
   "/api/portfolio/route": "app/api/portfolio/route.js",
-  "/page": "app/page.js",
-  "/admin/inquiries/page": "app/admin/inquiries/page.js"
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/admin/portfolio/[domain]/new/page": "app/admin/portfolio/[domain]/new/page.js",
+  "/admin/portfolio/[domain]/page": "app/admin/portfolio/[domain]/page.js"
 }

@@ -1,205 +1,197 @@
-/// <reference types="react" />
-import PortfolioVideo from "@/components/PortfolioVideo";
-import Project from "@/lib/models/Project";
-import { connectToDB } from "@/lib/mongodb";
-import Link from "next/link";
+"use client";
 
-interface ProjectType {
-  _id: string;
+import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+import { Navigation as SwiperNavigation, Thumbs as SwiperThumbs } from "swiper/modules";
+
+const DOMAIN_TABS = [
+  { label: "All", value: "all" },
+  { label: "Web Dev", value: "web" },
+  { label: "Mobile/App Dev", value: "mobile" },
+  { label: "3D Animation", value: "3d" },
+  { label: "Security", value: "security" },
+  { label: "Video Editing", value: "video" },
+  { label: "Game Dev", value: "game" },
+];
+
+interface Project {
+  id: string;
   title: string;
   slug: string;
   domain: string;
-  tags?: string[];
-  images?: string[];
-  status?: string;
-  featured?: boolean;
-  videoUrl?: string;
+  yearStart: number;
+  yearEnd: number;
+  mediaUrls: string[];
+  descriptionMarkdown: string;
+  featured: boolean;
 }
 
-const domainColors: Record<string, string> = {
-  web: "bg-gradient-to-r from-blue-400 to-blue-600",
-  "3d": "bg-gradient-to-r from-purple-400 to-purple-600",
-  security: "bg-gradient-to-r from-green-400 to-green-600",
-  video: "bg-gradient-to-r from-pink-400 to-pink-600",
-  mobile: "bg-gradient-to-r from-yellow-400 to-yellow-600",
+const isVideo = (url: string) => /\.(mp4|webm|ogg)$/i.test(url);
+const isImage = (url: string) => /\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(url);
+
+const isValidMediaUrl = (url: string) => {
+  if (!url || typeof url !== 'string') return false;
+  if (url.trim() === '' || url === '/' || url === '#') return false;
+  return true;
 };
 
-export default async function PortfolioIndexPage() {
-  await connectToDB();
-  const rawProjects = await Project.find({ status: "published" })
-    .sort({ date: -1 })
-    .lean();
-  // Ensure all fields are present and types are correct
-  const projects: ProjectType[] = rawProjects.map((p: any) => ({
-    _id: p._id?.toString() ?? "",
-    title: p.title ?? "",
-    slug: p.slug ?? "",
-    domain: p.domain ?? "",
-    tags: p.tags ?? [],
-    images: p.images ?? [],
-    status: p.status ?? "",
-    featured: p.featured ?? false,
-    videoUrl: p.videoUrl ?? "",
-  }));
-  // Group by domain
-  const grouped: Record<string, ProjectType[]> = projects.reduce(
-    (acc: Record<string, ProjectType[]>, project: ProjectType) => {
-      (acc[project.domain] = acc[project.domain] || []).push(project);
-      return acc;
-    },
-    {}
-  );
+function stripHtmlTags(str: string) {
+  return str.replace(/<[^>]*>?/gm, '');
+}
+
+export default function PortfolioPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [selectedDomain, setSelectedDomain] = useState<string>("all");
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+  const [videoErrorTiles, setVideoErrorTiles] = useState<{ [id: string]: boolean }>({});
+  const [videoErrorCarousel, setVideoErrorCarousel] = useState<{ [idx: number]: boolean }>({});
+  const [videoErrorThumbs, setVideoErrorThumbs] = useState<{ [idx: number]: boolean }>({});
+
+  useEffect(() => {
+    fetch(`/api/portfolio${selectedDomain !== "all" ? `?domain=${selectedDomain}` : ""}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setProjects(data);
+        if (data.length > 0) setSelectedProject(data[0]);
+        else setSelectedProject(null);
+      });
+  }, [selectedDomain]);
 
   return (
-    <main className="max-w-7xl mx-auto py-16 px-4">
-      <h1 className="text-5xl font-extrabold text-center mb-14 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-pink-500 to-yellow-500 select-none">
-        Portfolio
-      </h1>
-      {Object.keys(grouped).length === 0 && (
-        <div className="text-center text-gray-500">No projects found.</div>
-      )}
-      <div className="space-y-16">
-        {Object.entries(grouped).map(([domain, projects]) => (
-          <section key={domain}>
-            <div className="relative group glass-panel backdrop-blur-3xl bg-white/20 rounded-3xl shadow-3xl border border-white/30 p-6 md:p-14 mb-12 overflow-hidden ring-0 transition-all duration-300 hover:ring-2 hover:ring-pink-200/30">
-              {/* Gradient overlay */}
-              <div
-                className="pointer-events-none absolute inset-0 rounded-3xl z-0"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,0,128,0.07) 100%)",
-                }}
-              />
-              <div className="flex items-center mb-8 relative z-10">
-                {/* Animated accent bar */}
-                <div
-                  className={`w-2 h-8 rounded-full mr-4 animate-accent-bar ${
-                    domainColors[domain] || "bg-gray-300"
-                  }`}
-                  style={{ boxShadow: "0 0 16px 2px rgba(255,0,128,0.12)" }}
-                ></div>
-                <h2
-                  className="text-2xl md:text-3xl font-extrabold capitalize tracking-wide text-gray-800 drop-shadow-lg"
-                  style={{
-                    textShadow:
-                      "0 2px 12px rgba(255,255,255,0.5), 0 1px 0 #fff",
-                  }}
-                >
-                  {domain
-                    .replace("3d", "3D Animation")
-                    .replace("web", "Web")
-                    .replace("security", "Security")
-                    .replace("video", "Video Editing")
-                    .replace("mobile", "Mobile")}
-                </h2>
-                <div className="flex-1 border-t border-gray-200 ml-4" />
-              </div>
-              <div className="glass-panel backdrop-blur-xl bg-white/10 rounded-3xl shadow-xl border border-white/20 p-6 md:p-10 relative z-10">
-                <div
-                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10"
-                  role="list"
-                >
-                  {projects.map((project) => (
-                    <Link
-                      key={project._id}
-                      href={`/portfolio/${project.domain}/${project.slug}`}
-                      className="group focus:outline-none focus:ring-4 focus:ring-pink-300"
-                      aria-label={`View project: ${project.title}`}
-                      role="listitem"
-                      tabIndex={0}
-                    >
-                      <div className="max-w-md w-full mx-auto glass-panel rounded-3xl overflow-hidden shadow-xl border border-white/30 transition-transform duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-3xl hover:border-pink-400/60 hover:ring-2 hover:ring-pink-200/40 relative flex flex-col items-center bg-white/60 backdrop-blur-md group-hover:bg-white/80 group-hover:shadow-pink-200/40">
-                        {/* Domain tag */}
-                        <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-white shadow-md z-10">
-                          {project.domain
-                            ?.replace("3d", "3D Animation")
-                            .replace("web", "Web")
-                            .replace("security", "Security")
-                            .replace("video", "Video Editing")
-                            .replace("mobile", "Mobile") || "Other"}
-                        </span>
-                        {/* Domain accent bar */}
-                        <div
-                          className={`absolute top-0 left-0 w-full h-2 animate-accent-bar ${
-                            domainColors[project.domain] || "bg-gray-200"
-                          }`}
-                        ></div>
-                        {/* Featured badge */}
-                        {project.featured && (
-                          <span
-                            className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-md animate-pulse z-10"
-                            aria-label="Featured project"
-                          >
-                            Featured
-                          </span>
-                        )}
-                        {project.videoUrl &&
-                        (project.videoUrl.endsWith(".mp4") ||
-                          project.videoUrl.endsWith(".webm")) ? (
-                          <PortfolioVideo
-                            src={project.videoUrl}
-                            poster={project.images?.[0]}
-                            ariaLabel={project.title + " video preview"}
-                            className="w-full h-52 object-cover rounded-t-3xl"
-                            style={{
-                              boxShadow: "0 4px 24px 0 rgba(0,0,0,0.08)",
-                              maxHeight: "13rem",
-                            }}
-                          />
-                        ) : project.images?.[0] ? (
-                          <img
-                            src={project.images[0]}
-                            alt={project.title + " preview"}
-                            className="w-full h-52 object-cover rounded-t-3xl"
-                            style={{
-                              boxShadow: "0 4px 24px 0 rgba(0,0,0,0.08)",
-                              maxHeight: "13rem",
-                            }}
-                          />
-                        ) : (
-                          <div
-                            className="w-full h-52 bg-gray-200 rounded-t-3xl"
-                            role="img"
-                            aria-label="No image available"
-                          />
-                        )}
-                        <div className="p-6 w-full">
-                          <h3
-                            className="text-xl font-bold mb-2 text-gray-900 group-hover:text-primary transition-colors text-center"
-                            style={{
-                              textShadow: "0 1px 8px rgba(255,255,255,0.7)",
-                            }}
-                          >
-                            {project.title}
-                          </h3>
-                          <div className="flex flex-wrap gap-2 mb-3 justify-center">
-                            {project.tags?.map((tag) => (
-                              <span
-                                key={tag}
-                                className="px-3 py-1 bg-white/70 text-gray-700 text-xs rounded-full shadow-sm border border-gray-200"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                          <div className="text-xs text-gray-500 capitalize font-medium text-center">
-                            {domain
-                              .replace("3d", "3D Animation")
-                              .replace("web", "Web")
-                              .replace("security", "Security")
-                              .replace("video", "Video Editing")
-                              .replace("mobile", "Mobile")}
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+    <div className="flex min-h-screen w-full bg-transparent bg-dot-red/[0.2] bg-fixed bg-cover">
+      {/* Left: Grid & Filters */}
+      <div
+        className="w-2/5 p-8 flex flex-col border-r border-2 border-white/20 shadow-2xl glass-left-pane"
+        style={{ background: "rgba(30,30,40,0.35)", backdropFilter: "blur(28px)" }}
+      >
+        <div className="flex items-center justify-center mb-8">
+          <h1 className="text-3xl font-bold uppercase tracking-wide text-red-500 drop-shadow-glow">Portfolio</h1>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-8 justify-center overflow-x-auto">
+          {DOMAIN_TABS.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setSelectedDomain(tab.value)}
+              className={`px-4 py-1.5 rounded-full font-semibold text-sm shadow transition-all duration-150 border
+                ${selectedDomain === tab.value
+                  ? "bg-red-600 text-white border-red-600 drop-shadow-glow"
+                  : "bg-white/10 text-gray-200 border-white/20 hover:bg-red-500/70 hover:text-white hover:border-red-500/70"}
+              `}
+              style={{ minWidth: '90px' }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <div
+          className="grid grid-cols-2 md:grid-cols-2 gap-4 flex-1 overflow-y-auto min-h-0 min-w-0"
+        >
+          {projects.map((project) => (
+            <div
+              key={project.id}
+              className={`relative rounded-2xl cursor-pointer group transition-all duration-200 border border-white/20 shadow-xl hover:scale-105 hover:shadow-red-500/40 hover:border-red-500/80 ${selectedProject?.id === project.id ? "ring-2 ring-red-500" : ""} h-64 min-h-0 min-w-0 flex flex-col justify-between`}
+              style={{ background: "#18181c" }}
+              onClick={() => setSelectedProject(project)}
+            >
+              {project.mediaUrls && project.mediaUrls[0] && isValidMediaUrl(project.mediaUrls[0]) ? (
+                isImage(project.mediaUrls[0]) ? (
+                  <img src={project.mediaUrls[0]} alt={project.title} className="w-full h-2/3 object-cover rounded-2xl" />
+                ) : isVideo(project.mediaUrls[0]) ? (
+                  <video src={project.mediaUrls[0]} className="w-full h-2/3 object-cover rounded-2xl bg-black/60" muted playsInline preload="metadata" controls={false} />
+                ) : (
+                  <div className="w-full h-2/3 flex items-center justify-center bg-white/5 text-gray-400 rounded-2xl">No Media</div>
+                )
+              ) : (
+                <div className="w-full h-2/3 flex items-center justify-center bg-white/5 text-gray-400 rounded-2xl">No Media</div>
+              )}
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-center text-sm font-bold rounded-b-2xl py-2">
+                {project.title}
               </div>
             </div>
-          </section>
-        ))}
+          ))}
+        </div>
       </div>
-    </main>
+      {/* Right: Detail Pane */}
+      <div className="w-3/5 p-10 flex flex-col items-center justify-center bg-transparent relative">
+        {selectedProject ? (
+          <div className="w-full max-w-3xl p-8 rounded-3xl border border-white/30 shadow-2xl relative glass-detail-pane" style={{background: "rgba(30,30,40,0.45)", backdropFilter: "blur(32px)"}}>
+            {/* Carousel */}
+            {(selectedProject?.mediaUrls || []).length > 0 ? (
+              <Swiper
+                modules={[SwiperNavigation, SwiperThumbs]}
+                navigation
+                thumbs={thumbsSwiper && thumbsSwiper.el ? { swiper: thumbsSwiper } : undefined}
+                className="rounded-2xl mb-4 shadow-lg w-full"
+                style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(12px)", maxHeight: "500px" }}
+              >
+                {(selectedProject?.mediaUrls || []).map((url, idx) => (
+                  <SwiperSlide key={idx}>
+                    {isValidMediaUrl(url) && isVideo(url) && !videoErrorCarousel[idx] ? (
+                      <video
+                        src={url}
+                        className="w-full h-80 object-cover rounded-2xl"
+                        muted
+                        controls
+                        onError={() => setVideoErrorCarousel(errs => ({ ...errs, [idx]: true }))}
+                      />
+                    ) : isValidMediaUrl(url) && isImage(url) ? (
+                      <img src={url} className="w-full h-80 object-cover rounded-2xl" alt="media" />
+                    ) : (
+                      <div className="w-full h-80 flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
+                    )}
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            ) : (
+              <div className="w-full h-80 flex items-center justify-center bg-white/10 text-gray-400 rounded-2xl mb-4">No Media</div>
+            )}
+            {/* Media Gallery Row */}
+            {(selectedProject?.mediaUrls || []).length > 1 && (
+              <div className="flex flex-row gap-3 justify-center items-center mt-6 mb-6">
+                {(selectedProject?.mediaUrls || []).map((url, idx) => (
+                  <div key={idx} className="rounded-lg overflow-hidden border border-white/20 bg-black/30 w-20 h-14 flex items-center justify-center">
+                    {isValidMediaUrl(url) && isVideo(url) ? (
+                      <video src={url} className="w-full h-full object-cover bg-black/60" muted playsInline preload="metadata" controls={false} />
+                    ) : isValidMediaUrl(url) && isImage(url) ? (
+                      <img src={url} className="w-full h-full object-cover" alt="thumb" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">No Media</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {/* Details */}
+            <h2 className="text-2xl text-white font-bold mb-1">{selectedProject.title}</h2>
+            <div className="prose prose-invert max-w-none mb-2">
+              <ReactMarkdown>
+                {stripHtmlTags(selectedProject.descriptionMarkdown)}
+              </ReactMarkdown>
+            </div>
+          </div>
+        ) : (
+          <div className="text-gray-400 text-xl">Select a project to view details.</div>
+        )}
+      </div>
+      <style jsx global>{`
+        .glass-detail-pane {
+          background: rgba(30,30,40,0.45) !important;
+          border: 1.5px solid rgba(255,255,255,0.18) !important;
+          backdrop-filter: blur(32px) !important;
+          box-shadow: 0 0 60px 8px #f43f5e22, 0 12px 60px rgba(0,0,0,0.28);
+        }
+        .glass-left-pane {
+          background: rgba(30,30,40,0.35) !important;
+          border: 1.5px solid rgba(255,255,255,0.13) !important;
+          backdrop-filter: blur(28px) !important;
+          box-shadow: 0 0 32px 4px #f43f5e11, 0 4px 32px rgba(0,0,0,0.18);
+        }
+      `}</style>
+    </div>
   );
 }

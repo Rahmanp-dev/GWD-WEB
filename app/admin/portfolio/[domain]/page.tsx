@@ -45,7 +45,7 @@ export default function PortfolioDomainPage({
           <NeonButton>Add Project</NeonButton>
         </Link>
       </div>
-      <GlassCard>
+      <GlassCard className="bg-white/10 dark:bg-[#18181c]/80 backdrop-blur-xl border border-red-500/30 shadow-xl">
         <div className="flex gap-4 mb-4 items-center">
           <label htmlFor="search" className="sr-only">
             Search by title
@@ -114,7 +114,10 @@ export default function PortfolioDomainPage({
                   Title
                 </th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
-                  Date
+                  Domain
+                </th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                  Year Range
                 </th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
                   Status
@@ -133,18 +136,20 @@ export default function PortfolioDomainPage({
                   className="focus:outline-none focus:ring-2 focus:ring-pink-300"
                 >
                   <td className="px-4 py-2">
-                    {project.images && project.images[0] ? (
+                    {project.mediaUrls && project.mediaUrls[0] ? (
+                      <img
+                        src={project.mediaUrls[0]}
+                        alt={project.title + " thumbnail"}
+                        className="w-16 h-16 object-cover rounded-lg border-2 border-red-500/40 shadow"
+                      />
+                    ) : project.images && project.images[0] ? (
                       <img
                         src={project.images[0]}
                         alt={project.title + " thumbnail"}
-                        className="w-16 h-16 object-cover rounded-lg"
+                        className="w-16 h-16 object-cover rounded-lg border"
                       />
                     ) : (
-                      <div
-                        className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center"
-                        role="img"
-                        aria-label="No image available"
-                      />
+                      <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 border">No Media</div>
                     )}
                   </td>
                   <td className="px-4 py-2 font-semibold flex items-center gap-2">
@@ -158,9 +163,8 @@ export default function PortfolioDomainPage({
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2">
-                    {format(new Date(project.date), "yyyy-MM-dd")}
-                  </td>
+                  <td className="px-4 py-2 capitalize">{project.domain}</td>
+                  <td className="px-4 py-2">{project.yearStart} - {project.yearEnd}</td>
                   <td className="px-4 py-2">
                     <span
                       className={`px-2 py-1 rounded text-xs font-bold ${
