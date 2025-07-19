@@ -57,7 +57,7 @@ const Sidebar = () => {
             <a
               className={`group flex items-center px-2 py-2 text-base font-medium rounded-md transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400
                 ${
-                  pathname?.startsWith(item.href)
+                pathname?.startsWith(item.href)
                     ? "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-300 border-l-4 border-red-500"
                     : "text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-red-500/30 hover:text-red-700 dark:hover:text-red-200 hover:scale-[1.04] hover:shadow-lg border-l-4 border-transparent hover:border-red-400"
                 }
@@ -70,15 +70,15 @@ const Sidebar = () => {
         ))}
         <div className="mt-6">
                   <div className="px-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-2">
-          Portfolio CMS
-        </div>
+            Portfolio CMS
+          </div>
           <div className="space-y-1">
             {portfolioDomains.map((domain) => (
               <Link key={domain.href} href={domain.href} legacyBehavior>
                 <a
                   className={`block px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400
                     ${
-                      pathname?.startsWith(domain.href)
+                    pathname?.startsWith(domain.href)
                         ? "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-300 border-l-4 border-red-500"
                         : "text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-red-500/30 hover:text-red-700 dark:hover:text-red-200 hover:scale-[1.04] hover:shadow-lg border-l-4 border-transparent hover:border-red-400"
                     }

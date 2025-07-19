@@ -1,9 +1,5 @@
 {
-  "/portfolio/page": "app/portfolio/page.js",
-  "/api/admin/projects/route": "app/api/admin/projects/route.js",
   "/page": "app/page.js",
   "/api/portfolio/route": "app/api/portfolio/route.js",
-  "/api/admin/requests/route": "app/api/admin/requests/route.js",
-  "/admin/portfolio/[domain]/page": "app/admin/portfolio/[domain]/page.js",
-  "/admin/inquiries/page": "app/admin/inquiries/page.js"
+  "/_not-found/page": "app/_not-found/page.js"
 }

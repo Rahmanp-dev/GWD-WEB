@@ -87,11 +87,11 @@ export default function PortfolioPage() {
               {tab.label}
             </button>
           ))}
-        </div>
-        <div
+              </div>
+                <div
           className="grid grid-cols-2 gap-3 md:grid-cols-2 flex-1 overflow-y-auto min-h-0 min-w-0"
-        >
-          {projects.map((project) => (
+                >
+                  {projects.map((project) => (
             <div
               key={project.id}
               className={`relative rounded-2xl cursor-pointer group transition-all duration-200 border border-white/20 shadow-xl hover:scale-105 hover:shadow-red-500/40 hover:border-red-500/80 ${selectedProject?.id === project.id ? "ring-2 ring-red-500" : ""} h-40 md:h-64 min-h-0 min-w-0 flex flex-col justify-between`}
@@ -103,18 +103,18 @@ export default function PortfolioPage() {
                   <img src={project.mediaUrls[0]} alt={project.title} className="w-full h-2/3 object-cover rounded-2xl" />
                 ) : isVideo(project.mediaUrls[0]) ? (
                   <video src={project.mediaUrls[0]} className="w-full h-2/3 object-cover rounded-2xl bg-black/60" muted playsInline preload="metadata" controls={false} />
-                ) : (
+                        ) : (
                   <div className="w-full h-2/3 flex items-center justify-center bg-white/5 text-gray-400 rounded-2xl">No Media</div>
                 )
               ) : (
                 <div className="w-full h-2/3 flex items-center justify-center bg-white/5 text-gray-400 rounded-2xl">No Media</div>
               )}
               <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-center text-xs md:text-sm font-bold rounded-b-2xl py-2">
-                {project.title}
-              </div>
-            </div>
-          ))}
-        </div>
+                            {project.title}
+                        </div>
+                      </div>
+                  ))}
+                </div>
       </div>
       {/* Right: Detail Pane (Bottom on mobile) */}
       <div className="w-full md:w-3/5 p-4 md:p-10 flex flex-col items-center justify-center bg-transparent relative overflow-y-auto max-h-screen">

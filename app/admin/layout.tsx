@@ -20,7 +20,7 @@ export default function AdminLayout({
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="px-6 pt-6">
-          <Topbar />
+        <Topbar />
         </div>
         <main className="flex-1 overflow-x-hidden overflow-y-auto p-6 pt-4">
           <AnimatePresence mode="wait">

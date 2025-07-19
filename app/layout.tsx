@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import BackgroundSelector from "../components/BackgroundSelector";
 import FloatingNavbar from "../components/ui/FloatingNavbar";
 import TopLeftLogo from "../components/ui/TopRightLogo";
+import { SmoothCursor } from "../components/ui/smooth-cursor";
 
 import "./globals.css";
 
@@ -54,6 +55,7 @@ export default function RootLayout({
         className={inter.className + " font-body text-black bg-white dark:text-white dark:bg-dark-bg"}
         style={{ position: "relative", minHeight: "100vh" }}
       >
+        <SmoothCursor />
         <Toaster 
           position="bottom-center" 
           toastOptions={{

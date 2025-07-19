@@ -35,7 +35,7 @@ const NavItem = ({ item }: { item: (typeof navItems)[0] }) => (
         whileTap={{ scale: 0.95 }}
         className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-transparent transition-colors duration-300 group-hover:bg-white/20"
       >
-        <item.icon className="h-6 w-6 text-black transition-colors duration-300 group-hover:text-red-500" />
+        <item.icon className="h-6 w-6 text-black transition-colors duration-300 group-hover:text-red-700" />
       </motion.div>
     </div>
   </Link>
@@ -44,7 +44,7 @@ const NavItem = ({ item }: { item: (typeof navItems)[0] }) => (
 const navTabs = [
   { name: "Home", href: "/" },
   { name: "Portfolio", href: "/portfolio" },
-  { name: "Contact Us", href: "#contact" },
+  { name: "Contact Us", href: "/services" },
 ];
 
 const FloatingNavbar = () => {
