@@ -6,6 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import { GlassCard } from "../ui/GlassCard";
 import { GlassInput } from "../ui/GlassInput";
 import { NeonButton } from "../ui/NeonButton";
+import { GlassFormWrapper } from "../GlassFormWrapper";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -150,7 +151,7 @@ export function ProjectForm({
     }
     setSaving(true);
     try {
-      await onSave({ ...form, status });
+    await onSave({ ...form, status });
     } catch (err: any) {
       setError(err?.message || err?.error || "Failed to save project.");
     } finally {
@@ -159,14 +160,15 @@ export function ProjectForm({
   };
 
   return (
-    <GlassCard className="max-w-2xl mx-auto p-6">
+    <GlassFormWrapper className="max-w-2xl mx-auto p-6">
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-red-700/60 text-white font-semibold shadow border border-red-400/60 backdrop-blur">
           {error}
         </div>
       )}
+      <form>
       <div className="mb-4">
-        <label htmlFor="title" className="block font-semibold mb-1">
+          <label htmlFor="title" className="block font-semibold mb-1 text-white">
           Title
         </label>
         <GlassInput
@@ -174,10 +176,11 @@ export function ProjectForm({
           aria-label="Project title"
           value={form.title}
           onChange={(e) => handleTitleChange(e.target.value)}
+            className="bg-white/5 dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/70 shadow transition-all duration-200"
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="slug" className="block font-semibold mb-1">
+          <label htmlFor="slug" className="block font-semibold mb-1 text-white">
           Slug
         </label>
         <GlassInput
@@ -187,16 +190,17 @@ export function ProjectForm({
           onChange={(e) =>
             setForm((f: ProjectFormState) => ({ ...f, slug: e.target.value }))
           }
+            className="bg-white/5 dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/70 shadow transition-all duration-200"
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="domain" className="block font-semibold mb-1">
+          <label htmlFor="domain" className="block font-semibold mb-1 text-white">
           Domain
         </label>
         <select
           id="domain"
           aria-label="Project domain"
-          className="input-glass"
+            className="input-glass bg-white/5 dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/70 shadow transition-all duration-200"
           value={form.domain}
           onChange={(e) =>
             setForm((f: ProjectFormState) => ({ ...f, domain: e.target.value }))
@@ -210,21 +214,22 @@ export function ProjectForm({
         </select>
       </div>
       <div className="mb-4">
-        <label htmlFor="description" className="block font-semibold mb-1">
+          <label htmlFor="description" className="block font-semibold mb-1 text-white">
           Description
         </label>
         <ReactQuill
           id="description"
           aria-label="Project description"
-          value={form.descriptionMarkdown}
+            value={form.descriptionMarkdown}
           onChange={(desc) =>
-            setForm((f: ProjectFormState) => ({ ...f, descriptionMarkdown: desc }))
+              setForm((f: ProjectFormState) => ({ ...f, descriptionMarkdown: desc }))
           }
           theme="snow"
+            className="bg-white/5 dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/70 shadow transition-all duration-200"
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="images" className="block font-semibold mb-1">
+          <label htmlFor="images" className="block font-semibold mb-1 text-white">
           Images
         </label>
         <input
@@ -235,9 +240,10 @@ export function ProjectForm({
           accept="image/*"
           onChange={handleImageChange}
           ref={fileInputRef}
+            className="bg-white/5 dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/70 shadow transition-all duration-200"
         />
         <div className="flex gap-2 mt-2">
-          {form.mediaUrls.map((img: string, i: number) => (
+            {form.mediaUrls.map((img: string, i: number) => (
             <img
               key={i}
               src={img}
@@ -248,7 +254,7 @@ export function ProjectForm({
         </div>
       </div>
       <div className="mb-4">
-        <label htmlFor="video" className="block font-semibold mb-1">
+          <label htmlFor="video" className="block font-semibold mb-1 text-white">
           Video
         </label>
         <input
@@ -257,23 +263,24 @@ export function ProjectForm({
           type="file"
           accept="video/mp4,video/webm"
           onChange={handleVideoChange}
+            className="bg-white/5 dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/70 shadow transition-all duration-200"
         />
-        {form.mediaUrls.length > 0 && (
+          {form.mediaUrls.length > 0 && (
           <video
-            src={form.mediaUrls[0]}
+              src={form.mediaUrls[0]}
             className="w-40 h-24 mt-2 rounded"
             muted
             loop
             preload="metadata"
             onMouseOver={(e) => (e.currentTarget as HTMLVideoElement).play()}
             onMouseOut={(e) => (e.currentTarget as HTMLVideoElement).pause()}
-            poster={form.mediaUrls[0] || undefined}
+              poster={form.mediaUrls[0] || undefined}
             aria-label="Project video preview"
           />
         )}
       </div>
       <div className="mb-4">
-        <label htmlFor="tags" className="block font-semibold mb-1">
+          <label htmlFor="tags" className="block font-semibold mb-1 text-white">
           Tags
         </label>
         <GlassInput
@@ -282,10 +289,11 @@ export function ProjectForm({
           value={form.tags.join(", ")}
           onChange={(e) => handleTags(e.target.value)}
           placeholder="Comma separated"
+            className="bg-white/5 dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/70 shadow transition-all duration-200"
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="date" className="block font-semibold mb-1">
+          <label htmlFor="date" className="block font-semibold mb-1 text-white">
           Date
         </label>
         <GlassInput
@@ -296,10 +304,11 @@ export function ProjectForm({
           onChange={(e) =>
             setForm((f: ProjectFormState) => ({ ...f, date: e.target.value }))
           }
+            className="bg-white/5 dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/70 shadow transition-all duration-200"
         />
       </div>
       <div className="mb-4 flex items-center gap-4">
-        <label htmlFor="featured" className="font-semibold">
+          <label htmlFor="featured" className="font-semibold text-white">
           Featured
         </label>
         <input
@@ -318,34 +327,16 @@ export function ProjectForm({
         <span className="text-xs text-gray-500">Show on homepage</span>
       </div>
       <div className="mb-4">
-        <label className="block font-semibold mb-1">Media Upload</label>
-        <div
-          className="border-2 border-dashed border-red-500/60 rounded-xl p-6 bg-white/10 dark:bg-[#18181c]/60 backdrop-blur-md flex flex-col items-center justify-center cursor-pointer hover:border-red-500 transition"
-          tabIndex={0}
-          role="button"
-          aria-label="Upload media"
-          onClick={() => fileInputRef.current?.click()}
-          onDrop={async (e) => {
-            e.preventDefault();
-            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
-            if (files.length === 0) return;
-            const formData = new FormData();
-            files.forEach(file => formData.append('files', file));
-            const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
-            const { urls } = await res.json();
-            setForm(f => ({ ...f, mediaUrls: [...(f.mediaUrls || []), ...urls] }));
-          }}
-          onDragOver={e => e.preventDefault()}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*,video/*"
-            multiple
-            className="hidden"
-            onChange={async (e) => {
-              if (!e.target.files) return;
-              const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
+          <label className="block font-semibold mb-1 text-white">Media Upload</label>
+          <div
+            className="border-2 border-dashed border-red-500/60 rounded-xl p-6 bg-white/10 dark:bg-[#18181c]/60 backdrop-blur-md flex flex-col items-center justify-center cursor-pointer hover:border-red-500 transition"
+            tabIndex={0}
+            role="button"
+            aria-label="Upload media"
+            onClick={() => fileInputRef.current?.click()}
+            onDrop={async (e) => {
+              e.preventDefault();
+              const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
               if (files.length === 0) return;
               const formData = new FormData();
               files.forEach(file => formData.append('files', file));
@@ -353,47 +344,68 @@ export function ProjectForm({
               const { urls } = await res.json();
               setForm(f => ({ ...f, mediaUrls: [...(f.mediaUrls || []), ...urls] }));
             }}
-          />
-          <span className="text-gray-200 text-sm mb-2">Drag & drop images or videos here, or <span className="underline text-red-400">click to select</span></span>
-          <span className="text-xs text-gray-400">Accepted: JPG, PNG, GIF, MP4, WebM, etc.</span>
-        </div>
-        {form.mediaUrls && form.mediaUrls.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-            {form.mediaUrls.map((url, idx) => (
-              <div key={url} className="relative group rounded-lg overflow-hidden border border-white/20 bg-black/30">
-                {url.match(/\.(mp4|webm|ogg)$/i) ? (
-                  <video src={url} className="w-full h-28 object-cover" controls />
-                ) : (
-                  <img src={url} className="w-full h-28 object-cover" alt="media" />
-                )}
-                <button
-                  type="button"
-                  className="absolute top-1 right-1 bg-red-600/80 text-white rounded-full w-7 h-7 flex items-center justify-center shadow hover:bg-red-700 transition"
-                  aria-label="Remove media"
-                  onClick={() => setForm(f => ({ ...f, mediaUrls: f.mediaUrls.filter((_, i) => i !== idx) }))}
-                >
-                  &times;
-                </button>
-              </div>
-            ))}
+            onDragOver={e => e.preventDefault()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,video/*"
+              multiple
+              className="hidden"
+              onChange={async (e) => {
+                if (!e.target.files) return;
+                const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
+                if (files.length === 0) return;
+                const formData = new FormData();
+                files.forEach(file => formData.append('files', file));
+                const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
+                const { urls } = await res.json();
+                setForm(f => ({ ...f, mediaUrls: [...(f.mediaUrls || []), ...urls] }));
+              }}
+            />
+            <span className="text-gray-200 text-sm mb-2">Drag & drop images or videos here, or <span className="underline text-red-400">click to select</span></span>
+            <span className="text-xs text-gray-400">Accepted: JPG, PNG, GIF, MP4, WebM, etc.</span>
           </div>
-        )}
-        <span className="text-xs text-gray-400 mt-2 block">You can upload multiple files. First media will be used as the project thumbnail.</span>
+          {form.mediaUrls && form.mediaUrls.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+              {form.mediaUrls.map((url, idx) => (
+                <div key={url} className="relative group rounded-lg overflow-hidden border border-white/20 bg-black/30">
+                  {url.match(/\.(mp4|webm|ogg)$/i) ? (
+                    <video src={url} className="w-full h-28 object-cover" controls />
+                  ) : (
+                    <img src={url} className="w-full h-28 object-cover" alt="media" />
+                  )}
+                  <button
+                    type="button"
+                    className="absolute top-1 right-1 bg-red-600/80 text-white rounded-full w-7 h-7 flex items-center justify-center shadow hover:bg-red-700 transition"
+                    aria-label="Remove media"
+                    onClick={() => setForm(f => ({ ...f, mediaUrls: f.mediaUrls.filter((_, i) => i !== idx) }))}
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <span className="text-xs text-gray-400 mt-2 block">You can upload multiple files. First media will be used as the project thumbnail.</span>
       </div>
-      <div className="flex gap-4 mt-6 justify-end">
+        <div className="flex gap-4 mt-6 justify-end">
         <NeonButton
           onClick={() => handleSave("draft")}
-          disabled={saving}
+            disabled={saving}
+            className="bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition-transform text-base focus:outline-none focus:ring-2 focus:ring-red-500/70"
         >
-          {saving ? "Saving..." : "Save as Draft"}
+            {saving ? "Saving..." : "Save as Draft"}
         </NeonButton>
         <NeonButton
           onClick={() => handleSave("published")}
-          disabled={saving}
+            disabled={saving}
+            className="bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition-transform text-base focus:outline-none focus:ring-2 focus:ring-red-500/70"
         >
-          {saving ? "Saving..." : "Publish"}
+            {saving ? "Saving..." : "Publish"}
         </NeonButton>
       </div>
-    </GlassCard>
+      </form>
+    </GlassFormWrapper>
   );
 }

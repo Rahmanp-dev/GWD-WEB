@@ -4,6 +4,7 @@ import { useState } from "react";
 import ServiceForm from "@/components/ServiceForm";
 import BackgroundParticles from "@/components/BackgroundParticles";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 const DOMAINS = [
   { label: "Web Development", value: "Web Development" },
@@ -14,7 +15,7 @@ const DOMAINS = [
   { label: "Game Development", value: "Game Development" },
 ];
 
-export default function ServicesPage() {
+function ServicesPageInner() {
   const [selectedDomain, setSelectedDomain] = useState(DOMAINS[0].value);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -30,10 +31,10 @@ export default function ServicesPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center bg-black/40 overflow-x-hidden">
+    <div className="relative min-h-screen w-full flex flex-col items-center ">
       <BackgroundParticles />
-      <main className="relative z-10 w-full flex flex-col items-center justify-center py-8 px-2">
-        <div className="w-full max-w-3xl flex flex-col gap-8 md:gap-12">
+      <main className="relative z-10 w-full flex flex-col items-center justify-center py-8 px-2 mt-12">
+        <div className="w-full max-w-5xl flex flex-col gap-8 md:gap-12">
           {/* Toggle/Segmented Control */}
           <div className="flex justify-center gap-2 mb-4 md:mb-8">
             <button
@@ -86,5 +87,13 @@ export default function ServicesPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ServicesPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ServicesPageInner />
+    </Suspense>
   );
 } 

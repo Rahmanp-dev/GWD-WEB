@@ -4,6 +4,7 @@ import HeroWheel from "@/components/HeroWheel";
 import PartnersCarousel from "@/components/PartnersCarousel";
 import PortfolioCarousel from "@/components/PortfolioCarousel";
 import ServiceForm from "@/components/ServiceForm";
+import { ExpertiseShowcase } from "@/components/ExpertiseShowcase";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -49,6 +50,20 @@ export default function HomeClient() {
             />
           </motion.div>
         )}
+      </div>
+
+      <div className="container mx-auto px-2 md:px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          {/* Replace old Our Expertise section with new one */}
+          <section id="our-expertise">
+            <ExpertiseShowcase />
+          </section>
+        </motion.div>
       </div>
 
       <motion.div
