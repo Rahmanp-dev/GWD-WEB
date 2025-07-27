@@ -1,5 +1,11 @@
 {
+  "/events/page": "app/events/page.js",
   "/page": "app/page.js",
   "/api/portfolio/route": "app/api/portfolio/route.js",
-  "/_not-found/page": "app/_not-found/page.js"
+  "/api/admin/carousel/route": "app/api/admin/carousel/route.js",
+  "/api/admin/dashboard/route": "app/api/admin/dashboard/route.js",
+  "/api/admin/carousel/[id]/route": "app/api/admin/carousel/[id]/route.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/carousel/page": "app/admin/carousel/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js"
 }
