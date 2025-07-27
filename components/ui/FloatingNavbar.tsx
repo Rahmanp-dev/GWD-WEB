@@ -44,6 +44,7 @@ const NavItem = ({ item }: { item: (typeof navItems)[0] }) => (
 const navTabs = [
   { name: "Home", href: "/" },
   { name: "Portfolio", href: "/portfolio" },
+  { name: "Events", href: "/events" },
   { name: "Contact Us", href: "/services" },
 ];
 

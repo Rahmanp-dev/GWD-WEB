@@ -10,6 +10,8 @@ import {
   Mail,
   Settings,
   Users,
+  Calendar,
+  ImageIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,6 +21,8 @@ const navItems = [
   { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/inquiries", icon: Mail, label: "Inquiries" },
   { href: "/admin/projects", icon: Briefcase, label: "Projects" },
+  { href: "/admin/events", icon: Calendar, label: "Events" },
+  { href: "/admin/carousel", icon: ImageIcon, label: "Carousel" },
   { href: "/admin/clients", icon: Users, label: "Clients" },
   { href: "/admin/analytics", icon: BarChart2, label: "Analytics" },
   { href: "/admin/settings", icon: Settings, label: "Settings" },
