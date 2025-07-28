@@ -44,7 +44,7 @@ const Sidebar = () => {
     <motion.div
       animate={{ width: isCollapsed ? 80 : 256 }}
       transition={{ duration: 0.3 }}
-      className="bg-white/80 dark:bg-white/10 shadow-lg flex flex-col h-screen relative border-r border-gray-200 dark:border-white/20 backdrop-blur-md"
+      className="glass-panel flex flex-col h-screen relative border-r border-gray-200 dark:border-white/20"
     >
       <div className="flex items-center justify-between p-4 h-16 border-b border-gray-200 dark:border-white/20">
         {!isCollapsed && <span className="font-bold text-2xl text-black dark:text-white">GWD</span>}

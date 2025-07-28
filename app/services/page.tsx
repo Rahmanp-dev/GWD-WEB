@@ -76,7 +76,7 @@ function ServicesPageInner() {
             </div>
           )}
           {/* Form */}
-          <div className="glass-panel bg-white/10 dark:bg-white/5 border border-white/15 rounded-2xl p-4 md:p-8 shadow-none w-full">
+          <div >
             <ServiceForm
               key={formType + selectedDomain}
               service={selectedDomain}

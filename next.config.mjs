@@ -2,6 +2,8 @@
 const nextConfig = {
     env: {
         NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+        ADMIN_USERNAME: process.env.ADMIN_USERNAME,
+        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     },
     images: {
         remotePatterns: [
