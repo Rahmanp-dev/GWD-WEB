@@ -1,54 +1,21 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Bookmark, GitFork, Home, PlusSquare, Terminal, X } from "lucide-react";
-import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { Home, Menu, X, Briefcase, Calendar, Mail } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import React from "react";
 
-const navItems = [
-  { name: "Home", icon: Home, href: "/", target: "" },
-  { name: "Services", icon: Terminal, href: "/#service-form", target: "" },
-  {
-    name: "Add Project",
-    icon: PlusSquare,
-    href: "/admin/projects",
-    target: "",
-  },
-  { name: "Portfolio", icon: GitFork, href: "/portfolio", target: "" },
-  {
-    name: "GitHub",
-    icon: Bookmark,
-    href: "https://github.com/codycora",
-    target: "_blank",
-  },
-  { name: "Close", icon: X, href: "#", target: "" },
-];
-
-const NavItem = ({ item }: { item: (typeof navItems)[0] }) => (
-  <Link href={item.href} target={item.target}>
-    <div className="group relative" title={item.name}>
-      <motion.div
-        whileHover={{ scale: 1.1, y: -3 }}
-        whileTap={{ scale: 0.95 }}
-        className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-transparent transition-colors duration-300 group-hover:bg-white/20"
-      >
-        <item.icon className="h-6 w-6 text-black transition-colors duration-300 group-hover:text-red-700" />
-      </motion.div>
-    </div>
-  </Link>
-);
-
 const navTabs = [
-  { name: "Home", href: "/" },
-  { name: "Portfolio", href: "/portfolio" },
-  { name: "Events", href: "/events" },
-  { name: "Contact Us", href: "/services" },
+  { name: "Home", href: "/", icon: Home },
+  { name: "Portfolio", href: "/portfolio", icon: Briefcase },
+  { name: "Events", href: "/events", icon: Calendar },
+  { name: "Contact Us", href: "/services", icon: Mail },
 ];
 
 const FloatingNavbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeHash, setActiveHash] = useState("");
   const router = useRouter();
   const rawPathname = usePathname();
@@ -64,10 +31,10 @@ const FloatingNavbar = () => {
   }, []);
 
   const handleTabClick = (tab: { name: string; href: string }) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (tab.name === "Services") {
+    if (tab.name === "Contact Us") {
       e.preventDefault();
       if (pathname !== "/") {
-        router.push("/#service-form");
+        router.push("/services");
       } else {
         const el = document.getElementById("service-form");
         if (el) {
@@ -76,60 +43,81 @@ const FloatingNavbar = () => {
         }
       }
     }
+    setIsMobileMenuOpen(false); // Close menu on navigation
   };
 
   return (
     <>
-      {/* Mobile Bottom Navbar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-[100] flex justify-center md:hidden px-2 pb-2">
-        <div className="glass-panel flex items-center gap-1 px-2 py-1 z-[101] border border-white/10 bg-black/40 backdrop-blur-xl w-full max-w-md rounded-2xl overflow-x-auto scrollbar-hide shadow-md mx-2">
-          {navTabs.map((tab) => {
-            let isActive = false;
-            if (tab.href.startsWith("#")) {
-              isActive = activeHash === tab.href;
-            } else if (tab.href === "/") {
-              isActive = pathname === "/";
-            } else {
-              isActive = pathname.startsWith(tab.href);
-            }
-            return (
-              <a
-                key={tab.name}
-                href={tab.href}
-                className={`navbar-tab group relative transition-colors duration-200 whitespace-nowrap text-sm px-3 py-2${isActive ? " active" : ""}`}
-                aria-current={isActive ? "page" : undefined}
-                style={{ minWidth: 100, textAlign: "center", margin: "0 0.15rem" }}
-                onClick={tab.name === "Services" ? handleTabClick(tab) : undefined}
-              >
-                {tab.name}
-              </a>
-            );
-          })}
-        </div>
+      {/* Mobile Navbar */}
+      <nav className="md:hidden fixed top-4 right-4 z-[101]">
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="glass-panel p-3 rounded-full"
+        >
+          <Menu className="h-6 w-6 text-white" />
+        </motion.button>
       </nav>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-lg"
+          >
+            <div className="flex justify-end p-4">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-3"
+              >
+                <X className="h-8 w-8 text-white" />
+              </motion.button>
+            </div>
+            <div className="flex flex-col items-center justify-center h-full space-y-8">
+              {navTabs.map((tab) => (
+                <Link
+                  key={tab.name}
+                  href={tab.href}
+                  onClick={handleTabClick(tab)}
+                  className="text-3xl font-semibold text-white flex items-center gap-4"
+                >
+                  <tab.icon className="h-8 w-8" />
+                  {tab.name}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Desktop Top Navbar */}
-      <nav className="hidden md:flex fixed top-4 left-0 right-0 z-[100] justify-center px-4">
-        <div className="glass-panel flex items-center gap-0 px-2 py-1 z-[101] border border-white/10 bg-black/40 backdrop-blur-xl rounded-2xl overflow-hidden shadow-lg">
+      <nav className="hidden md:flex fixed top-4 left-1/2 -translate-x-1/2 z-[100] justify-center">
+        <div className="glass-panel flex items-center gap-2 px-3 py-2 rounded-full shadow-lg">
           {navTabs.map((tab) => {
-            let isActive = false;
-            if (tab.href.startsWith("#")) {
-              isActive = activeHash === tab.href;
-            } else if (tab.href === "/") {
-              isActive = pathname === "/";
-            } else {
-              isActive = pathname.startsWith(tab.href);
-            }
+            const isActive = pathname === tab.href;
             return (
-              <a
+              <Link
                 key={tab.name}
                 href={tab.href}
-                className={`navbar-tab group relative transition-colors duration-200 whitespace-nowrap text-sm px-4 py-2${isActive ? " active" : ""}`}
-                aria-current={isActive ? "page" : undefined}
-                style={{ minWidth: 80, textAlign: "center" }}
-                onClick={tab.name === "Services" ? handleTabClick(tab) : undefined}
+                onClick={handleTabClick(tab)}
+                className={`relative px-4 py-2 text-sm font-medium rounded-full transition-colors duration-300 ${
+                  isActive ? "text-white" : "text-gray-400 hover:text-white"
+                }`}
               >
-                {tab.name}
-              </a>
+                {isActive && (
+                  <motion.div
+                    layoutId="active-pill"
+                    className="absolute inset-0 bg-red-600 rounded-full"
+                    style={{ borderRadius: 9999 }}
+                    transition={{ duration: 0.6, type: "spring", bounce: 0.2, stiffness: 100 }}
+                  />
+                )}
+                <span className="relative z-10">{tab.name}</span>
+              </Link>
             );
           })}
         </div>

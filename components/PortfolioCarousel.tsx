@@ -35,7 +35,7 @@ const PortfolioCarousel = () => {
   return (
     <section
       id="portfolio"
-      className="py-20 bg-white/5 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-16"
+      className="glass-panel py-20 bg-white/5 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-16"
       aria-label="Featured Projects Carousel"
     >
       <div className="container mx-auto px-4">

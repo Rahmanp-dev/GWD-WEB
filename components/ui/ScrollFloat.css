@@ -1,0 +1,4 @@
+.scroll-float .char {
+  display: inline-block;
+  white-space: pre;
+}

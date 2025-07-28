@@ -21,7 +21,7 @@ const partners = [
 
 const PartnersCarousel = () => {
   return (
-    <section className="py-20 bg-white/10 dark:bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-16">
+    <section className="glass-panel py-20 bg-white/10 dark:bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-16">
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold text-center text-red-600 dark:text-red-400 mb-4">
           TRUSTED PARTNERS

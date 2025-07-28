@@ -5,6 +5,7 @@ import PartnersCarousel from "@/components/PartnersCarousel";
 import PortfolioCarousel from "@/components/PortfolioCarousel";
 import ServiceForm from "@/components/ServiceForm";
 import { ExpertiseShowcase } from "@/components/ExpertiseShowcase";
+import { Stats } from "@/components/Stats";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -36,6 +37,8 @@ export default function HomeClient() {
   return (
     <main>
       <HeroWheel onSelect={handleServiceSelect} />
+
+      <Stats />
 
       <div className="container mx-auto px-2 md:px-4">
         {service && selectedService && (

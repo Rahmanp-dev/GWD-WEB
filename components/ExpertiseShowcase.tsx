@@ -1,33 +1,18 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import ScrollStack, { ScrollStackItem } from './ui/ScrollStack';
 import { IconCloud } from "@/components/magicui/icon-cloud";
-import { CanvasRevealEffect } from "@/components/ui/CanvasRevealEffect";
-import { ExpertiseTabs } from "@/components/ExpertiseTabs";
 
-// Top icons of each domain
 const slugs = [
-  // Web
-  "react", "nextdotjs", "nodedotjs", "typescript", "tailwindcss",
-  // Mobile
-  "flutter", "firebase", "androidstudio",
-  // Game Dev
-  "unity", "unrealengine", "blender",
-  // DevOps
-  "docker", "kubernetes", "amazonaws",
-  // 3D & Animation
-  "blender", "figma", "adobeaftereffects",
-  // Video & VFX
-  "adobepremierepro", "finalcutpro", "davinciresolve",
-  // Cyber Security
-  "kalilinux", "wireshark", "burpsuite"
+  "react", "nextdotjs", "nodedotjs", "typescript", "tailwindcss", "flutter", 
+  "firebase", "androidstudio", "unity", "unrealengine", "blender", "docker", 
+  "kubernetes", "amazonaws", "figma", "adobeaftereffects", "adobepremierepro", 
+  "finalcutpro", "davinciresolve", "kalilinux", "wireshark", "burpsuite"
 ];
-const images = slugs.map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`);
 
 const domainCards = [
   {
     label: "Web Development",
-    icon: <img src="https://cdn.simpleicons.org/react/61DAFB" alt="Web" className="w-12 h-12" />,
-    color: "from-blue-500 to-cyan-500",
+    icon: "https://cdn.simpleicons.org/react/61DAFB",
     stack: [
       "HTML, CSS, JavaScript, TypeScript",
       "React, Next.js, Angular, Vue, Svelte",
@@ -35,14 +20,11 @@ const domainCards = [
       "Node.js, Express.js, NestJS",
       "MongoDB, PostgreSQL, MySQL, Supabase, Prisma, Firebase",
       "GraphQL, REST APIs",
-      "Vite, Webpack, Babel",
-      "Vercel, Netlify",
     ],
   },
   {
     label: "Mobile Development",
-    icon: <img src="https://cdn.simpleicons.org/flutter/02569B" alt="Mobile" className="w-12 h-12" />,
-    color: "from-fuchsia-500 to-pink-500",
+    icon: "https://cdn.simpleicons.org/flutter/02569B",
     stack: [
       "Flutter, Dart",
       "React Native, Expo",
@@ -54,8 +36,7 @@ const domainCards = [
   },
   {
     label: "Game Development",
-    icon: <img src="https://cdn.simpleicons.org/unity/222C37" alt="Game" className="w-12 h-12" />,
-    color: "from-emerald-500 to-green-700",
+    icon: "https://cdn.simpleicons.org/unity/222C37",
     stack: [
       "Unity, Unreal Engine, Godot",
       "C#, C++, Blueprints",
@@ -66,22 +47,19 @@ const domainCards = [
   },
   {
     label: "DevOps",
-    icon: <img src="https://cdn.simpleicons.org/docker/2496ED" alt="DevOps" className="w-12 h-12" />,
-    color: "from-sky-500 to-indigo-500",
+    icon: "https://cdn.simpleicons.org/docker/2496ED",
     stack: [
       "Docker, Kubernetes, Podman",
       "Jenkins, GitHub Actions, CircleCI",
       "AWS, Azure, GCP",
       "Terraform, Ansible, Pulumi",
       "Prometheus, Grafana, Loki",
-      "Vercel, Netlify, NGINX, Apache",
       "Git, GitLab, Bitbucket",
     ],
   },
   {
     label: "3D Animation & Modeling",
-    icon: <img src="https://cdn.simpleicons.org/blender/F5792A" alt="3D" className="w-12 h-12" />,
-    color: "from-orange-400 to-yellow-500",
+    icon: "https://cdn.simpleicons.org/blender/F5792A",
     stack: [
       "Blender, Autodesk Maya, Cinema4D, 3ds Max",
       "ZBrush, Houdini, Marvelous Designer",
@@ -91,8 +69,7 @@ const domainCards = [
   },
   {
     label: "Video Editing & VFX",
-    icon: <img src="https://cdn.simpleicons.org/adobeaftereffects/9999FF" alt="Video" className="w-12 h-12" />,
-    color: "from-purple-500 to-indigo-700",
+    icon: "https://cdn.simpleicons.org/adobeaftereffects/9999FF",
     stack: [
       "Adobe After Effects, Premiere Pro",
       "Final Cut Pro, DaVinci Resolve",
@@ -102,47 +79,56 @@ const domainCards = [
   },
   {
     label: "Cyber Security",
-    icon: <img src="https://cdn.simpleicons.org/kalilinux/557C94" alt="Security" className="w-12 h-12" />,
-    color: "from-red-500 to-rose-700",
+    icon: "https://cdn.simpleicons.org/kalilinux/557C94",
     stack: [
       "Kali Linux, Parrot OS",
       "Burp Suite, Metasploit, Wireshark",
       "Nmap, Nessus, Hydra, JohnTheRipper",
       "OWASP ZAP, Aircrack-ng, Hashcat",
       "Splunk, SIEM tools, Firejail",
-      "MITMproxy, Netcat",
     ],
   },
 ];
 
 export function ExpertiseShowcase() {
-  const [openIdx, setOpenIdx] = useState<number | null>(null);
   return (
-    <section id="our-expertise" className="w-full bg-transparent py-20 px-0">
-      <div className="max-w-screen-xl mx-auto px-6 py-20 bg-white/5 dark:bg-zinc-900/40 backdrop-blur-xl shadow-2xl rounded-2xl border border-white/20 flex flex-col items-center">
-        <h2 className="text-4xl font-semibold text-white text-center mb-12">Our Expertise</h2>
-        {/* Icon Cloud */}
-        <div className="w-full flex items-center justify-center mb-20" style={{ minHeight: 420 }}>
-          <IconCloud images={images} iconSize={36} radius={150} speed={3} />
+    <section id="our-expertise" className="glass-panel py-20 bg-white/5 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-16"
+      aria-label="Featured Projects Carousel">
+      <div className="max-w-screen-xl mx-auto flex flex-col items-center text-center px-4">
+        <h2 className="text-5xl md:text-7xl font-bold text-white mb-8">Our Expertise</h2>
+        <p className="text-lg md:text-xl text-gray-400 mb-12">
+          We master a wide array of technologies to bring your vision to life.
+        </p>
+        <div className="w-full h-[400px] relative">
+          <IconCloud
+            images={slugs.map(slug => `https://cdn.simpleicons.org/${slug}`)}
+            radius={180}
+            speed={4}
+          />
         </div>
-        {/* Domain Tabs (Modern Vertical Tabs) */}
-        <ExpertiseTabs domains={domainCards} />
+      </div>
+      <div className="max-w-screen-xl mx-auto px-4">
+        <ScrollStack
+          itemScale={0.02}
+          stackPosition="15vh"
+        >
+          {domainCards.map((card, index) => (
+            <ScrollStackItem key={index} itemClassName="glass-panel text-white p-8 md:p-12">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center mb-6">
+                  <img src={card.icon} alt={card.label} className="w-12 h-12 mr-6" />
+                  <h2 className="text-3xl md:text-4xl font-bold text-red-400">{card.label}</h2>
+                </div>
+                <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-gray-300">
+                  {card.stack.map((tech, i) => (
+                    <p key={i} className="text-sm md:text-base">{tech}</p>
+                  ))}
+                </div>
+              </div>
+            </ScrollStackItem>
+          ))}
+        </ScrollStack>
       </div>
     </section>
   );
 }
-
-// Plus icon for card corners
-const IconPlus = ({ className = "", ...rest }: any) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth="1.5"
-    stroke="currentColor"
-    className={className}
-    {...rest}
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
-  </svg>
-); 
