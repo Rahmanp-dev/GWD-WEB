@@ -1,10 +1,9 @@
 {
+  "/services/page": "app/services/page.js",
   "/events/page": "app/events/page.js",
-  "/api/admin/carousel/route": "app/api/admin/carousel/route.js",
-  "/api/admin/auth/route": "app/api/admin/auth/route.js",
   "/page": "app/page.js",
   "/api/portfolio/route": "app/api/portfolio/route.js",
-  "/admin/dashboard/page": "app/admin/dashboard/page.js",
-  "/admin/carousel/page": "app/admin/carousel/page.js",
-  "/admin/inquiries/page": "app/admin/inquiries/page.js"
+  "/admin/projects/page": "app/admin/projects/page.js",
+  "/admin/events/page": "app/admin/events/page.js",
+  "/admin/events/[id]/edit/page": "app/admin/events/[id]/edit/page.js"
 }

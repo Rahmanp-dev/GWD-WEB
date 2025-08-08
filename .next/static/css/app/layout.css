@@ -1069,6 +1069,9 @@ body{
 .max-w-6xl{
   max-width: 72rem;
 }
+.max-w-7xl{
+  max-width: 80rem;
+}
 .max-w-\[400px\]{
   max-width: 400px;
 }
@@ -1389,6 +1392,10 @@ body{
 .border-gray-700{
   --tw-border-opacity: 1;
   border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
+}
+.border-gray-800{
+  --tw-border-opacity: 1;
+  border-color: rgb(31 41 55 / var(--tw-border-opacity, 1));
 }
 .border-red-400{
   --tw-border-opacity: 1;
@@ -1763,6 +1770,9 @@ body{
 }
 .pt-6{
   padding-top: 1.5rem;
+}
+.pt-8{
+  padding-top: 2rem;
 }
 .text-left{
   text-align: left;
@@ -3715,6 +3725,10 @@ textarea::placeholder {
 
   .md\:grid-cols-3{
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-4{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .md\:flex-row{

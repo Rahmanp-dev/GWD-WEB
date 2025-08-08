@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import BackgroundSelector from "../components/BackgroundSelector";
+import Footer from "../components/Footer";
+import ToastProvider from "../components/ToastProvider";
 import FloatingNavbar from "../components/ui/FloatingNavbar";
 import TopLeftLogo from "../components/ui/TopRightLogo";
 import { SmoothCursor } from "../components/ui/smooth-cursor";
@@ -56,21 +57,13 @@ export default function RootLayout({
         style={{ position: "relative", minHeight: "100vh" }}
       >
         <SmoothCursor />
-        <Toaster 
-          position="bottom-center" 
-          toastOptions={{
-            style: {
-              background: 'var(--toast-bg, #1a1a1a)',
-              color: 'var(--toast-color, #ffffff)',
-              border: '1px solid var(--toast-border, #2a2a2a)',
-            },
-          }}
-        />
+        <ToastProvider />
         <BackgroundSelector />
         <TopLeftLogo />
         <FloatingNavbar />
 
         <div className="relative z-[1]">{children}</div>
+        <Footer />
       </body>
     </html>
   );
