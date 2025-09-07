@@ -5,9 +5,11 @@ import Footer from "../components/Footer";
 import ToastProvider from "../components/ToastProvider";
 import FloatingNavbar from "../components/ui/FloatingNavbar";
 import TopLeftLogo from "../components/ui/TopRightLogo";
-import { SmoothCursor } from "../components/ui/smooth-cursor";
+import dynamic from "next/dynamic";
 
 import "./globals.css";
+
+const SmoothCursor = dynamic(() => import("../components/ui/smooth-cursor").then(mod => mod.SmoothCursor), { ssr: false });
 
 const inter = Inter({ subsets: ["latin"] });
 
