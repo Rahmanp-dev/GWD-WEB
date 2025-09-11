@@ -1,61 +1,124 @@
-import Project from "@/lib/models/Project";
-import { connectToDB } from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
+import dbConnect from "@/lib/db";
+import Project from "@/lib/models/Project";
 
+// GET all projects
 export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
-    const { searchParams } = new URL(req.url);
-    const domain = searchParams.get("domain");
-    const query: any = {};
-    if (domain) query.domain = domain;
-    const projects = await Project.find(query).sort({ date: -1 });
-    return NextResponse.json(projects);
-  } catch (err) {
-    return NextResponse.json({ error: 'Failed to fetch projects', details: (err as any)?.message || err }, { status: 500 });
+    await dbConnect();
+    const projects = await Project.find({}).sort({ date: -1 }); // Sort by date
+    return NextResponse.json(projects, { status: 200 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unknown error occurred";
+    return NextResponse.json({ message: "Failed to fetch projects", error: message }, { status: 500 });
   }
 }
 
+// POST a new project
 export async function POST(req: NextRequest) {
   try {
-    await connectToDB();
-    const data = await req.json();
-    // Validation
-    const required = ['title', 'slug', 'domain', 'yearStart', 'yearEnd', 'mediaUrls', 'descriptionMarkdown'];
-    for (const field of required) {
-      if (!data[field] || (Array.isArray(data[field]) && data[field].length === 0)) {
-        return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 });
-      }
+    await dbConnect();
+    const body = await req.json();
+    const {
+      title,
+      slug,
+      domain,
+      descriptionMarkdown,
+      tags,
+      date,
+      featured,
+      status,
+      yearStart,
+      yearEnd,
+      mediaUrls,
+    } = body;
+
+    if (!title || !slug || !descriptionMarkdown) {
+      return NextResponse.json({ message: "Title, Slug, and Description are required." }, { status: 400 });
     }
-    // Slug uniqueness
-    const existing = await Project.findOne({ slug: data.slug });
+
+    const existing = await Project.findOne({ slug });
     if (existing) {
-      return NextResponse.json({ error: 'Slug must be unique' }, { status: 400 });
+      return NextResponse.json({ message: "Slug must be unique." }, { status: 409 }); // 409 Conflict
     }
-    const project = await Project.create(data);
-    return NextResponse.json(project);
-  } catch (err) {
-    return NextResponse.json({ error: 'Failed to create project', details: (err as any)?.message || err }, { status: 500 });
+
+    const newProject = new Project({
+      title,
+      slug,
+      domain,
+      descriptionMarkdown,
+      tags,
+      date,
+      featured,
+      status,
+      yearStart,
+      yearEnd,
+      mediaUrls,
+    });
+
+    await newProject.save();
+    return NextResponse.json({ message: "Project created successfully", data: newProject }, { status: 201 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unknown error occurred";
+    return NextResponse.json({ message: "Failed to create project", error: message }, { status: 500 });
   }
 }
 
-export async function PATCH(req: NextRequest) {
+// PUT (update) an existing project
+export async function PUT(req: NextRequest) {
   try {
-    await connectToDB();
-    const { ids, action, stage } = await req.json();
-    let result;
-    if (action === "delete") {
-      result = await Project.deleteMany({ _id: { $in: ids } });
-      console.log(`Deleted ${result.deletedCount} projects.`);
-    } else if (stage) {
-      result = await Project.updateMany(
-        { _id: { $in: ids } },
-        { $set: { stage } }
-      );
-      console.log(`Updated stage for ${result.modifiedCount} projects to '${stage}'.`);
+    await dbConnect();
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ message: "Project ID is required for an update." }, { status: 400 });
     }
-    return NextResponse.json({ success: true, result });
-  } catch (err) {
-    return NextResponse.json({ error: 'Failed to update projects', details: (err as any)?.message || err }, { status: 500 });
+
+    const body = await req.json();
+
+    // Optional: Check for slug uniqueness if it's being changed
+    if (body.slug) {
+      const existing = await Project.findOne({ slug: body.slug, _id: { $ne: id } });
+      if (existing) {
+        return NextResponse.json({ message: "Slug must be unique." }, { status: 409 });
+      }
+    }
+
+    const updatedProject = await Project.findByIdAndUpdate(id, body, { new: true, runValidators: true });
+
+    if (!updatedProject) {
+      return NextResponse.json({ message: "Project not found." }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Project updated successfully", data: updatedProject }, { status: 200 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unknown error occurred";
+    return NextResponse.json({ message: "Failed to update project", error: message }, { status: 500 });
+  }
+}
+
+
+// DELETE a project by ID
+export async function DELETE(req: NextRequest) {
+  try {
+    await dbConnect();
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ message: "Project ID is required for deletion." }, { status: 400 });
+    }
+
+    const deletedProject = await Project.findByIdAndDelete(id);
+
+    if (!deletedProject) {
+      return NextResponse.json({ message: "Project not found." }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Project deleted successfully." }, { status: 200 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unknown error occurred";
+    return NextResponse.json({ message: "Failed to delete project", error: message }, { status: 500 });
   }
 }

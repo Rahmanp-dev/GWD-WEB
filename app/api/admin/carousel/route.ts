@@ -1,13 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import dbConnect from '@/lib/db';
 import { CarouselImage } from '@/lib/models/Event';
-import { writeFile } from 'fs/promises';
-import path from 'path';
 
+// GET all images
 export async function GET() {
     await dbConnect();
     try {
-        const images = await CarouselImage.find({});
+        const images = await CarouselImage.find({}).sort({ createdAt: -1 });
         return NextResponse.json(images);
     } catch (error) {
         console.error('Failed to fetch carousel images:', error);
@@ -15,33 +14,47 @@ export async function GET() {
     }
 }
 
+// POST a new image URL
 export async function POST(request: Request) {
     await dbConnect();
     try {
-        const data = await request.formData();
-        const file: File | null = data.get('file') as unknown as File;
+        const { imageUrl } = await request.json();
 
-        if (!file) {
-            return NextResponse.json({ message: 'No file uploaded' }, { status: 400 });
+        if (!imageUrl) {
+            return NextResponse.json({ message: 'Image URL is required' }, { status: 400 });
         }
-
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
-        // Sanitize the filename to remove special characters and spaces
-        const sanitizedFilename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-        const filename = `${Date.now()}-${sanitizedFilename}`;
-        
-        const imagePath = path.join(process.cwd(), 'public/uploads', filename);
-        await writeFile(imagePath, buffer);
-        const imageUrl = `/uploads/${filename}`;
 
         const newImage = new CarouselImage({ imageUrl });
         await newImage.save();
 
         return NextResponse.json(newImage, { status: 201 });
     } catch (error) {
-        console.error('Failed to upload carousel image:', error);
-        return NextResponse.json({ message: 'Failed to upload carousel image' }, { status: 500 });
+        console.error('Failed to save image URL:', error);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        return NextResponse.json({ message: 'Failed to save image URL', error: errorMessage }, { status: 500 });
+    }
+}
+
+// DELETE an image
+export async function DELETE(request: NextRequest) {
+    await dbConnect();
+    try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get('id');
+
+        if (!id) {
+            return NextResponse.json({ message: 'Image ID is required' }, { status: 400 });
+        }
+
+        const deletedImage = await CarouselImage.findByIdAndDelete(id);
+
+        if (!deletedImage) {
+            return NextResponse.json({ message: 'Image not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: 'Image deleted successfully' });
+    } catch (error) {
+        console.error('Failed to delete image:', error);
+        return NextResponse.json({ message: 'Failed to delete image' }, { status: 500 });
     }
 }
