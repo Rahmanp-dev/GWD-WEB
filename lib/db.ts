@@ -3,15 +3,31 @@ import mongoose, { Mongoose } from "mongoose";
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/gwd-web-db";
 
 function encodeMongoURI(uri: string): string {
-  const parts = uri.split("@");
-  if (parts.length > 1) {
-    const credentials = parts[0].split("//")[1];
-    const [user, password] = credentials.split(":");
-    const encodedUser = encodeURIComponent(user);
-    const encodedPassword = encodeURIComponent(password);
-    return `mongodb+srv://${encodedUser}:${encodedPassword}@${parts[1]}`;
-  }
-  return uri;
+    const srv = uri.startsWith("mongodb+srv://");
+    const protocol = srv ? "mongodb+srv://" : "mongodb://";
+    const uriWithoutProtocol = uri.substring(protocol.length);
+
+    const atIndex = uriWithoutProtocol.lastIndexOf('@');
+    if (atIndex === -1) {
+        // No credentials
+        return uri;
+    }
+
+    const host = uriWithoutProtocol.substring(atIndex + 1);
+    const credentials = uriWithoutProtocol.substring(0, atIndex);
+
+    const colonIndex = credentials.indexOf(':');
+    if (colonIndex === -1) {
+        // Only username
+        const encodedUser = encodeURIComponent(credentials);
+        return `${protocol}${encodedUser}@${host}`;
+    } else {
+        const user = credentials.substring(0, colonIndex);
+        const password = credentials.substring(colonIndex + 1);
+        const encodedUser = encodeURIComponent(user);
+        const encodedPassword = encodeURIComponent(password);
+        return `${protocol}${encodedUser}:${encodedPassword}@${host}`;
+    }
 }
 
 // A global cache for the Mongoose connection.
@@ -39,7 +55,7 @@ async function dbConnect(): Promise<Mongoose> {
     const opts = {
       bufferCommands: false, // Disable buffering to throw errors immediately if connection fails
     };
-
+    
     const encodedURI = encodeMongoURI(MONGODB_URI);
 
     cached.promise = mongoose.connect(encodedURI, opts).then((mongooseInstance) => {

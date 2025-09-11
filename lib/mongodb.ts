@@ -1,5 +1,33 @@
 import mongoose from "mongoose";
 
+function encodeMongoURI(uri: string): string {
+    const srv = uri.startsWith("mongodb+srv://");
+    const protocol = srv ? "mongodb+srv://" : "mongodb://";
+    const uriWithoutProtocol = uri.substring(protocol.length);
+
+    const atIndex = uriWithoutProtocol.lastIndexOf('@');
+    if (atIndex === -1) {
+        // No credentials
+        return uri;
+    }
+
+    const host = uriWithoutProtocol.substring(atIndex + 1);
+    const credentials = uriWithoutProtocol.substring(0, atIndex);
+
+    const colonIndex = credentials.indexOf(':');
+    if (colonIndex === -1) {
+        // Only username
+        const encodedUser = encodeURIComponent(credentials);
+        return `${protocol}${encodedUser}@${host}`;
+    } else {
+        const user = credentials.substring(0, colonIndex);
+        const password = credentials.substring(colonIndex + 1);
+        const encodedUser = encodeURIComponent(user);
+        const encodedPassword = encodeURIComponent(password);
+        return `${protocol}${encodedUser}:${encodedPassword}@${host}`;
+    }
+}
+
 // Using a global variable to maintain a cached connection across hot reloads in development.
 // This prevents connections from growing exponentially during API Route usage.
 let cached = (global as any).mongoose;
@@ -35,10 +63,12 @@ export async function connectToDB() {
       family: 4
     };
 
+    const encodedURI = encodeMongoURI(MONGODB_URI);
+
     console.log("⏳ Attempting to connect to MongoDB...");
-    console.log("📍 Connection URI:", MONGODB_URI);
+    console.log("📍 Connection URI:", encodedURI);
     
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(encodedURI, opts).then((mongoose) => {
       console.log("✅ MongoDB connected successfully");
       console.log("📊 Database:", mongoose.connection.db?.databaseName || "Unknown");
       console.log("🔗 Connection state:", mongoose.connection.readyState);
