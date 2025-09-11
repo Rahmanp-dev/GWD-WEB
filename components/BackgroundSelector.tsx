@@ -16,7 +16,7 @@ const BackgroundSelector = () => {
   }, []);
 
   const background = useMemo<BackgroundType>(() => {
-    if (pathname === '/' || pathname.startsWith('/portfolio')) {
+    if (pathname === '/' || (pathname && pathname.startsWith('/portfolio'))) {
       return 'tedx';
     }
     return 'classic';
