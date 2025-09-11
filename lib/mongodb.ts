@@ -60,7 +60,6 @@ export async function connectToDB() {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
-      family: 4
     };
 
     const encodedURI = encodeMongoURI(MONGODB_URI);
