@@ -9,7 +9,7 @@ if (!cached) {
 }
 
 export async function connectToDB() {
-  const MONGODB_URI = "mongodb://localhost:27017/gwd-web-db";
+  const MONGODB_URI = process.env.MONGODB_URI;
 
   if (!MONGODB_URI) {
     console.error("❌ MONGODB_URI not found. Please define it in .env.local");
@@ -66,4 +66,4 @@ export async function connectToDB() {
   }
 
   return cached.conn;
-} 
+}

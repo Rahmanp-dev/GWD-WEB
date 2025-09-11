@@ -1,11 +1,17 @@
 // scripts/seed.ts
 import mongoose from 'mongoose';
-
+import dotenv from 'dotenv';
 import Client from '../lib/models/Client';
 import Inquiry from '../lib/models/Inquiry';
 import Project from '../lib/models/Project';
 
-const MONGODB_URI = "mongodb://localhost:27017/gwd-web-db";
+dotenv.config({ path: '.env.local' });
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+}
 
 const sampleClients = [
   { name: 'Creative Solutions Inc.', email: 'contact@creativesolutions.com', company: 'Creative Solutions Inc.' },
@@ -20,41 +26,77 @@ const sampleInquiries = [
 ];
 
 const sampleProjects = [
-    { title: 'E-commerce Platform', client: 'Creative Solutions Inc.', service: 'Web Dev', budget: '$8,000', status: 'inProgress', startDate: new Date('2023-01-15'), endDate: new Date('2023-04-30') },
-    { title: 'Mobile Banking App', client: 'Tech Innovators LLC', service: 'App Dev', budget: '$30,000', status: 'completed', startDate: new Date('2022-11-01'), endDate: new Date('2023-03-20') },
-    { title: 'Social Media Campaign', client: 'Global Marketing Group', service: 'Marketing', budget: '$4,500', status: 'new', startDate: new Date('2023-05-01'), endDate: new Date('2023-06-01') },
+    {
+      title: "E-commerce Platform for Fashion Brand",
+      slug: "ecommerce-fashion-platform",
+      domain: "Web Dev",
+      yearStart: 2022,
+      yearEnd: 2023,
+      descriptionMarkdown: "A full-stack e-commerce solution with a custom CMS and integrated payment gateways.",
+      mediaUrls: ["/images/fashion-ecommerce.jpg"],
+      featured: true,
+      status: 'published'
+    },
+    {
+      title: "Mobile App for Fitness Tracking",
+      slug: "fitness-tracker-app",
+      domain: "App Dev",
+      yearStart: 2021,
+      yearEnd: 2022,
+      descriptionMarkdown: "A cross-platform mobile app for iOS and Android to track workouts, nutrition, and progress.",
+      mediaUrls: ["/images/fitness-app.jpg"],
+      featured: true,
+      status: 'published'
+    },
+    {
+        title: "Brand Identity and Marketing Campaign",
+        slug: "brand-identity-campaign",
+        domain: "Marketing",
+        yearStart: 2023,
+        yearEnd: 2023,
+        descriptionMarkdown: "Developed a new brand identity and executed a multi-channel marketing campaign to increase brand awareness.",
+        mediaUrls: ["/images/marketing-campaign.jpg"],
+        featured: false,
+        status: 'published'
+    },
+    {
+        title: "3D Product Visualization for Furniture Company",
+        slug: "3d-product-visualization",
+        domain: "3D & Motion",
+        yearStart: 2022,
+        yearEnd: 2023,
+        descriptionMarkdown: "Created photorealistic 3D visualizations of furniture products for use in online catalogs and marketing materials.",
+        mediaUrls: ["/images/3d-product-viz.jpg"],
+        featured: true,
+        status: 'published'
+    }
 ];
 
+async function seedDatabase() {
+  console.log('Connecting to database...');
+  await mongoose.connect(MONGODB_URI);
+  console.log('Database connected.');
 
-const seedDatabase = async () => {
-  console.log('Attempting to connect to the database...');
-  try {
-    await mongoose.connect(MONGODB_URI);
-    console.log('✅ Database connection successful!');
-  } catch (error) {
-    console.error('🔴 Database connection failed. Please ensure your MongoDB server is running on localhost:27017');
-    console.error('Error details:', error);
-    process.exit(1);
-  }
+  console.log('Clearing existing data...');
+  await Client.deleteMany({});
+  await Inquiry.deleteMany({});
+  await Project.deleteMany({});
 
-  try {
-    console.log('🧹 Clearing existing data...');
-    await Client.deleteMany({});
-    await Inquiry.deleteMany({});
-    await Project.deleteMany({});
+  console.log('Seeding clients...');
+  await Client.insertMany(sampleClients);
 
-    console.log('🌱 Inserting new data...');
-    await Client.insertMany(sampleClients);
-    await Inquiry.insertMany(sampleInquiries);
-    await Project.insertMany(sampleProjects);
+  console.log('Seeding inquiries...');
+  await Inquiry.insertMany(sampleInquiries);
+  
+  console.log('Seeding projects...');
+  await Project.insertMany(sampleProjects);
 
-    console.log('✅ Database seeded successfully!');
-  } catch (error) {
-    console.error('🔴 Error seeding the database:', error);
-  } finally {
-    await mongoose.connection.close();
-    console.log('Database connection closed.');
-  }
-};
+  console.log('Database seeded successfully!');
 
-seedDatabase(); 
+  await mongoose.connection.close();
+}
+
+seedDatabase().catch(err => {
+  console.error('Error seeding database:', err);
+  mongoose.connection.close();
+});

@@ -1,4 +1,4 @@
-import dbConnect from "@/lib/db";
+import { connectToDB } from "@/lib/mongodb";
 import Client from "@/lib/models/Client";
 import Inquiry from "@/lib/models/Inquiry";
 import Project from "@/lib/models/Project";
@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    await dbConnect();
+    await connectToDB();
 
     const [inquiryCount, activeProjectCount, clientCount, recentInquiries] =
       await Promise.all([
