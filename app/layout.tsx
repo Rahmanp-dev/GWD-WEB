@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+"use client";
 import { Inter } from "next/font/google";
 import BackgroundSelector from "../components/BackgroundSelector";
 import Footer from "../components/Footer";
@@ -12,12 +12,6 @@ import "./globals.css";
 const SmoothCursor = dynamic(() => import("../components/ui/smooth-cursor").then(mod => mod.SmoothCursor), { ssr: false });
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "GWD Global - Freelancer Weapon Wheel",
-  description:
-    "Professional services for web development, app development, marketing, and 3D & motion design.",
-};
 
 export default function RootLayout({
   children,
