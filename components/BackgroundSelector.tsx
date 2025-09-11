@@ -1,23 +1,31 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import BackgroundParticles from "./BackgroundParticles";
-import ParticleBackground from "./ParticleBackground";
+import { useState, useEffect, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
+import BackgroundParticles from './BackgroundParticles';
+import ParticleBackground from './ParticleBackground';
 
-type BackgroundType = "tedx" | "classic";
+type BackgroundType = 'tedx' | 'classic' | 'none';
 
 const BackgroundSelector = () => {
-  const [background, setBackground] = useState<BackgroundType>("tedx");
+  const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  const background = useMemo<BackgroundType>(() => {
+    if (pathname === '/') {
+      return 'tedx';
+    }
+    return 'classic';
+  }, [pathname]);
+
   return (
     <>
-      {isClient && background === "tedx" && <BackgroundParticles />}
-      {isClient && background === "classic" && <ParticleBackground />}
+      {isClient && background === 'tedx' && <BackgroundParticles />}
+      {isClient && background === 'classic' && <ParticleBackground />}
     </>
   );
 };
