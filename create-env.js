@@ -1,33 +1,52 @@
-#!/usr/bin/env node
-
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 
-console.log('🔧 Creating proper .env file for NextAuth.js...\n');
+// Define the new environment variables to be added
+const newEnvVariables = `
+CLOUDINARY_CLOUD_NAME="cloud_name"
+CLOUDINARY_API_KEY="api_key"
+CLOUDINARY_API_SECRET="api_secret"
+`;
 
-// Generate a secure secret
-const generateSecret = () => {
-    return crypto.randomBytes(32).toString('hex');
-};
+// Path to the .env.local file
+const envFilePath = path.join(__dirname, '.env.local');
 
-const envPath = path.join(process.cwd(), '.env');
+// Read the existing .env.local file
+fs.readFile(envFilePath, 'utf8', (err, data) => {
+  if (err) {
+    // If the file doesn't exist, create it with the new variables
+    if (err.code === 'ENOENT') {
+      fs.writeFile(envFilePath, newEnvVariables.trim(), 'utf8', (writeErr) => {
+        if (writeErr) {
+          console.error('Error creating .env.local file:', writeErr);
+        } else {
+          console.log('.env.local file created successfully with new variables.');
+        }
+      });
+    } else {
+      console.error('Error reading .env.local file:', err);
+    }
+  } else {
+    // If the file exists, append the new variables if they are not already present
+    let updatedData = data;
+    const variablesToAdd = newEnvVariables.trim().split('\n');
+    variablesToAdd.forEach(variable => {
+      const key = variable.split('=')[0];
+      if (!data.includes(key)) {
+        updatedData += `\n${variable}`;
+      }
+    });
 
-// Create .env content with proper NextAuth configuration
-const envContent = `# Database Configuration
-DATABASE_URL="file:./dev.db"
-
-# NextAuth.js Configuration
-NEXTAUTH_SECRET="${generateSecret()}"
-NEXTAUTH_URL="http://localhost:3000"
-
-# Development Configuration
-NODE_ENV="development"`;
-
-// Write .env file
-fs.writeFileSync(envPath, envContent);
-
-console.log('✅ .env file created with proper NextAuth.js configuration');
-console.log('📝 Generated secure NEXTAUTH_SECRET');
-console.log('🌐 Set NEXTAUTH_URL to http://localhost:3000');
-console.log('\n🚀 You can now start the server with: npm run dev'); 
+    if (updatedData !== data) {
+      fs.writeFile(envFilePath, updatedData, 'utf8', (writeErr) => {
+        if (writeErr) {
+          console.error('Error writing to .env.local file:', writeErr);
+        } else {
+          console.log('New environment variables added to .env.local successfully.');
+        }
+      });
+    } else {
+      console.log('All new environment variables are already present in .env.local.');
+    }
+  }
+});

@@ -7,12 +7,6 @@ import Project from '../lib/models/Project';
 
 dotenv.config({ path: '.env.local' });
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
-}
-
 const sampleClients = [
   { name: 'Creative Solutions Inc.', email: 'contact@creativesolutions.com', company: 'Creative Solutions Inc.' },
   { name: 'Tech Innovators LLC', email: 'hello@techinnovators.com', company: 'Tech Innovators LLC' },
@@ -73,6 +67,11 @@ const sampleProjects = [
 ];
 
 async function seedDatabase() {
+  const MONGODB_URI = process.env.MONGODB_URI;
+  if (!MONGODB_URI) {
+    throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+  }
+
   console.log('Connecting to database...');
   await mongoose.connect(MONGODB_URI);
   console.log('Database connected.');

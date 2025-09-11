@@ -53,8 +53,8 @@ const PartnersCarousel = () => {
                 <Image
                   src={partner.src}
                   alt={partner.alt}
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  style={{ objectFit: "contain" }}
                 />
               </div>
             </SwiperSlide>

@@ -79,7 +79,6 @@ function ServicesPageInner() {
           <div >
             <ServiceForm
               key={formType + selectedDomain}
-              service={selectedDomain}
               serviceLabel={selectedDomain}
               isFreelancer={formType === "freelancer"}
             />
@@ -96,4 +95,4 @@ export default function ServicesPage() {
       <ServicesPageInner />
     </Suspense>
   );
-} 
+}

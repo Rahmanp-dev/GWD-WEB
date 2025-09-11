@@ -11,7 +11,11 @@ export interface IEvent extends Document {
   date: Date;
 }
 
-export type SerializedEvent = {
+export interface ICarouselImage extends Document {
+  imageUrl: string;
+}
+
+export interface SerializedEvent {
   _id: string;
   title: string;
   location: string;
@@ -20,17 +24,13 @@ export type SerializedEvent = {
   imageUrl: string;
   googleFormUrl: string;
   status: 'Upcoming' | 'Past';
-  date: string;
-};
-
-export interface ICarouselImage extends Document {
-  imageUrl: string;
+  date: string; 
 }
 
-export type SerializedCarouselImage = {
+export interface SerializedCarouselImage {
   _id: string;
   imageUrl: string;
-};
+}
 
 const eventSchema: Schema = new Schema({
   title: { type: String, required: true },

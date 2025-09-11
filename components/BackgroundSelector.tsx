@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BackgroundParticles from "./BackgroundParticles";
 import ParticleBackground from "./ParticleBackground";
 
@@ -8,11 +8,16 @@ type BackgroundType = "tedx" | "classic";
 
 const BackgroundSelector = () => {
   const [background, setBackground] = useState<BackgroundType>("tedx");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <>
-      {background === "tedx" && <BackgroundParticles />}
-      {background === "classic" && <ParticleBackground />}
+      {isClient && background === "tedx" && <BackgroundParticles />}
+      {isClient && background === "classic" && <ParticleBackground />}
     </>
   );
 };

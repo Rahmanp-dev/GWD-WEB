@@ -48,7 +48,6 @@ export default function HomeClient() {
             transition={{ duration: 0.5 }}
           >
             <ServiceForm
-              service={service}
               serviceLabel={selectedService.label}
             />
           </motion.div>

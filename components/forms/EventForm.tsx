@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SerializedEvent } from "@/lib/models/Event";
+import toast from "react-hot-toast";
 
 interface EventFormProps {
   event?: SerializedEvent;
@@ -17,10 +18,10 @@ const EventForm = ({ event, isNew = false }: EventFormProps) => {
     location: event?.location || "",
     time: event?.time || "",
     description: event?.description || "",
-    imageUrl: event?.imageUrl || "",
     googleFormUrl: event?.googleFormUrl || "",
     status: event?.status || "Upcoming",
   });
+  const [imageUrl, setImageUrl] = useState<string | null>(event?.imageUrl || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,10 +30,34 @@ const EventForm = ({ event, isNew = false }: EventFormProps) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const uploadPromise = fetch("/api/admin/upload", { method: "POST", body: formData })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.secureUrl) throw new Error("Upload failed to return a secure URL.");
+        setImageUrl(data.secureUrl);
+        return data.secureUrl;
+      });
+
+    toast.promise(uploadPromise, {
+      loading: "Uploading image...",
+      success: "Image uploaded successfully!",
+      error: "Failed to upload image.",
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+
+    const finalData = { ...formData, imageUrl };
 
     const url = isNew ? "/api/admin/events" : `/api/admin/events/${event?._id}`;
     const method = isNew ? "POST" : "PUT";
@@ -41,17 +66,20 @@ const EventForm = ({ event, isNew = false }: EventFormProps) => {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(finalData),
       });
 
       if (!res.ok) {
-        throw new Error(`Failed to ${isNew ? 'create' : 'update'} event`);
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Failed to ${isNew ? 'create' : 'update'} event`);
       }
 
       router.push("/admin/events");
-      router.refresh(); // Refresh server components
+      router.refresh();
+      toast.success(`Event ${isNew ? 'created' : 'updated'} successfully!`);
     } catch (err: any) {
       setError(err.message);
+      toast.error(err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -78,20 +106,24 @@ const EventForm = ({ event, isNew = false }: EventFormProps) => {
           <label htmlFor="time" className="block text-sm font-medium text-gray-300">Time</label>
           <input type="text" name="time" id="time" value={formData.time} onChange={handleChange} required className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm text-white p-2" />
         </div>
+        
+        {/* Image Upload */}
         <div>
-          <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-300">Image URL</label>
-          <input type="text" name="imageUrl" id="imageUrl" value={formData.imageUrl} onChange={handleChange} required className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm text-white p-2" />
+          <label htmlFor="image" className="block text-sm font-medium text-gray-300">Event Image</label>
+          <input type="file" name="image" id="image" onChange={handleFileChange} className="mt-1 block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100" />
         </div>
+        {imageUrl && (
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-300">Image Preview</label>
+            <img src={imageUrl} alt="Event Preview" className="mt-2 rounded-lg max-h-48" />
+          </div>
+        )}
+
         <div>
           <label htmlFor="googleFormUrl" className="block text-sm font-medium text-gray-300">Google Form URL</label>
           <input type="text" name="googleFormUrl" id="googleFormUrl" value={formData.googleFormUrl} onChange={handleChange} required className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm text-white p-2" />
         </div>
-        {formData.imageUrl && (
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-300">Image Preview</label>
-            <img src={formData.imageUrl} alt="Event Preview" className="mt-2 rounded-lg max-h-48" />
-          </div>
-        )}
+
         <div>
           <label htmlFor="status" className="block text-sm font-medium text-gray-300">Status</label>
           <select name="status" id="status" value={formData.status} onChange={handleChange} className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm text-white p-2">
@@ -107,7 +139,7 @@ const EventForm = ({ event, isNew = false }: EventFormProps) => {
       </div>
 
       <div className="flex justify-end">
-        <button type="submit" disabled={isSubmitting} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50">
+        <button type="submit" disabled={isSubmitting || !imageUrl} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50">
           {isSubmitting ? 'Saving...' : (isNew ? 'Create Event' : 'Update Event')}
         </button>
       </div>

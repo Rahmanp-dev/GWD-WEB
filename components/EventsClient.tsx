@@ -2,20 +2,17 @@
 
 import BackgroundParticles from "./BackgroundParticles";
 import EventCard from '@/components/cards/EventCard';
-import { SerializedEvent, SerializedCarouselImage } from '@/lib/models/Event';
+import { SerializableEvent, SerializableCarouselImage } from '@/app/events/page';
 import EventCarousel from './EventCarousel';
 
 interface EventsClientProps {
-    events: SerializedEvent[];
-    carouselImages: SerializedCarouselImage[];
+    events: SerializableEvent[];
+    carouselImages: SerializableCarouselImage[];
 }
 
 const EventsClient = ({ events, carouselImages }: EventsClientProps) => {
     const upcomingEvents = events.filter((event) => event.status === 'Upcoming');
     const pastEvents = events.filter((event) => event.status === 'Past');
-
-    console.log('Upcoming Events:', upcomingEvents);
-    console.log('Past Events:', pastEvents);
 
     return (
         <div className="relative min-h-screen text-white">
