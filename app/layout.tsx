@@ -1,17 +1,17 @@
-"use client";
 import { Inter } from "next/font/google";
-import BackgroundSelector from "../components/BackgroundSelector";
-import Footer from "../components/Footer";
-import ToastProvider from "../components/ToastProvider";
-import FloatingNavbar from "../components/ui/FloatingNavbar";
-import TopLeftLogo from "../components/ui/TopRightLogo";
-import dynamic from "next/dynamic";
-
+import ToastProvider from "@/components/ToastProvider";
+import SmoothCursor from "@/components/ui/smooth-cursor";
+import BackgroundSelector from "@/components/BackgroundSelector";
+import TopRightLogo from "@/components/ui/TopRightLogo";
+import FloatingNavbar from "@/components/ui/FloatingNavbar";
 import "./globals.css";
 
-const SmoothCursor = dynamic(() => import("../components/ui/smooth-cursor").then(mod => mod.SmoothCursor), { ssr: false });
-
 const inter = Inter({ subsets: ["latin"] });
+
+export const metadata = {
+  title: "LGWD",
+  description: "Let's Get Work Done - Freelancing Platform",
+};
 
 export default function RootLayout({
   children,
@@ -19,27 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="font-body text-black dark">
+    <html lang="en" className="dark">
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Suppress SES warnings in console
-              const originalWarn = console.warn;
-              console.warn = function(...args) {
-                const message = args.join(' ');
-                if (message.includes('dateTaming') || 
-                    message.includes('mathTaming') || 
-                    message.includes('unpermitted intrinsics')) {
-                  return;
-                }
-                originalWarn.apply(console, args);
-              };
-              
-              // Debug background loading
-              console.log('Layout: BackgroundSelector should be loading...');
-              
-              // Force dark mode
               (function() {
                 document.documentElement.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
@@ -49,17 +33,15 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={inter.className + " font-body text-black bg-white dark:text-white dark:bg-dark-bg"}
+        className={inter.className + " font-body text-white bg-dark-bg"}
         style={{ position: "relative", minHeight: "100vh" }}
       >
         <SmoothCursor />
         <ToastProvider />
         <BackgroundSelector />
-        <TopLeftLogo />
+        <TopRightLogo />
         <FloatingNavbar />
-
-        <div className="relative z-[1]">{children}</div>
-        <Footer />
+        <main style={{ position: "relative", zIndex: 1 }}>{children}</main>
       </body>
     </html>
   );

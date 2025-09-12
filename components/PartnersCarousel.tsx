@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Image from "next/image";
 import "swiper/css";
@@ -17,6 +17,9 @@ const partners = [
   { src: "/partners/logo9.jpg", alt: "Partner 9" },
   { src: "/partners/logo10.jpg", alt: "Partner 10" },
   { src: "/partners/logo11.png", alt: "Partner 11" },
+  { src: "/partners/logo12.jpg", alt: "Partner 12" },
+  { src: "/partners/logo13.jpg", alt: "Partner 13" },
+  { src: "/partners/logo14.jpg", alt: "Partner 14" },
 ];
 
 const PartnersCarousel = () => {
@@ -54,6 +57,7 @@ const PartnersCarousel = () => {
                   src={partner.src}
                   alt={partner.alt}
                   fill
+                  sizes="(min-width: 768px) 160px, 96px"
                   style={{ objectFit: "contain" }}
                 />
               </div>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import ServiceForm from "@/components/ServiceForm";
@@ -31,14 +31,14 @@ function ServicesPageInner() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center ">
+    <div className="relative min-h-screen w-full flex flex-col items-center py-24 px-4 sm:px-6 lg:px-8">
       <BackgroundParticles />
-      <main className="relative z-10 w-full flex flex-col items-center justify-center py-8 px-2 mt-12">
-        <div className="w-full max-w-5xl flex flex-col gap-8 md:gap-12">
+      <main className="relative z-10 w-full max-w-4xl">
+        <div className="w-full flex flex-col items-center gap-8">
           {/* Toggle/Segmented Control */}
-          <div className="flex justify-center gap-2 mb-4 md:mb-8">
+          <div className="flex justify-center gap-2 mb-4 p-1 rounded-full glass-panel">
             <button
-              className={`px-6 py-2 rounded-l-full font-semibold text-base md:text-lg transition-all duration-200 focus:outline-none border border-white/20 ${formType === "client" ? "bg-white/20 text-red-500 border-red-400" : "bg-white/5 text-white/80 hover:bg-white/10"}`}
+              className={`px-6 py-2 rounded-full font-semibold text-base md:text-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${formType === "client" ? "bg-red-500 text-white shadow-lg" : "text-white/80 hover:bg-white/10"}`}
               onClick={() => handleFormTypeChange("client")}
               aria-pressed={formType === "client"}
               aria-label="Show client inquiry form"
@@ -46,7 +46,7 @@ function ServicesPageInner() {
               I'm a Client
             </button>
             <button
-              className={`px-6 py-2 rounded-r-full font-semibold text-base md:text-lg transition-all duration-200 focus:outline-none border border-white/20 ${formType === "freelancer" ? "bg-white/20 text-red-500 border-red-400" : "bg-white/5 text-white/80 hover:bg-white/10"}`}
+              className={`px-6 py-2 rounded-full font-semibold text-base md:text-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${formType === "freelancer" ? "bg-red-500 text-white shadow-lg" : "text-white/80 hover:bg-white/10"}`}
               onClick={() => handleFormTypeChange("freelancer")}
               aria-pressed={formType === "freelancer"}
               aria-label="Show freelancer onboarding form"
@@ -54,20 +54,21 @@ function ServicesPageInner() {
               I'm a Freelancer
             </button>
           </div>
+
           {/* Domain Selector (Client only) */}
           {formType === "client" && (
-            <div className="glass-panel border border-white/15 bg-white/10 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-4 md:p-6 flex flex-col gap-2 w-full">
-              <h2 className="text-lg font-bold text-white mb-2 tracking-wide uppercase text-center md:text-left">Select Domain</h2>
-              <div className="flex flex-col gap-2">
+            <div className="glass-panel p-6 w-full">
+              <h2 className="text-xl font-bold text-white mb-4 text-center tracking-wider">Select a Service</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {DOMAINS.map((domain) => (
-                  <label key={domain.value} className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer border transition-all duration-150 ${selectedDomain === domain.value ? 'bg-white/20 border-red-400 text-red-300' : 'bg-white/5 border-white/10 text-white/80 hover:bg-white/10'}` }>
+                  <label key={domain.value} className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer border-2 transition-all duration-150 ${selectedDomain === domain.value ? 'bg-red-500/30 border-red-500 text-white' : 'bg-white/5 border-transparent text-white/80 hover:bg-white/10'}` }>
                     <input
                       type="radio"
                       name="domain"
                       value={domain.value}
                       checked={selectedDomain === domain.value}
                       onChange={() => setSelectedDomain(domain.value)}
-                      className="accent-red-500 w-5 h-5"
+                      className="hidden"
                     />
                     <span className="text-base font-medium">{domain.label}</span>
                   </label>
@@ -75,10 +76,11 @@ function ServicesPageInner() {
               </div>
             </div>
           )}
+
           {/* Form */}
-          <div >
+          <div className="w-full">
             <ServiceForm
-              key={formType + selectedDomain}
+              key={formType + (formType === 'client' ? selectedDomain : '')}
               serviceLabel={selectedDomain}
               isFreelancer={formType === "freelancer"}
             />
@@ -91,7 +93,7 @@ function ServicesPageInner() {
 
 export default function ServicesPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-white">Loading...</div>}>
       <ServicesPageInner />
     </Suspense>
   );

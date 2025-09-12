@@ -14,7 +14,7 @@ export function NeonButton({
 }: NeonButtonProps) {
   return (
     <Component
-      className={`btn-primary glass-neon-border ${className ?? ""}`}
+      className={`neon-button ${className || ''}`.trim()}
       {...rest}
     >
       {children}

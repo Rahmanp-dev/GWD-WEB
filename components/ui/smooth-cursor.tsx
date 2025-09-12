@@ -80,15 +80,15 @@ const DefaultCursorSVG: FC = () => {
   );
 };
 
-export function SmoothCursor({
+const SmoothCursor: FC<SmoothCursorProps> = ({
   cursor = <DefaultCursorSVG />,
   springConfig = {
-    damping: 100,
-    stiffness: 1000,
-    mass: 1,
+    damping: 80,
+    stiffness: 3000,
+    mass: 0.5,
     restDelta: 0.001,
   },
-}: SmoothCursorProps) {
+}) => {
   const [isMoving, setIsMoving] = useState(false);
   const lastMousePos = useRef<Position>({ x: 0, y: 0 });
   const velocity = useRef<Position>({ x: 0, y: 0 });
@@ -100,13 +100,13 @@ export function SmoothCursor({
   const cursorY = useSpring(0, springConfig);
   const rotation = useSpring(0, {
     ...springConfig,
-    damping: 60,
-    stiffness: 300,
+    damping: 40,
+    stiffness: 500,
   });
   const scale = useSpring(1, {
     ...springConfig,
-    stiffness: 500,
-    damping: 35,
+    stiffness: 800,
+    damping: 30,
   });
 
   useEffect(() => {
@@ -205,4 +205,6 @@ export function SmoothCursor({
       {cursor}
     </motion.div>
   );
-}
+};
+
+export default SmoothCursor;

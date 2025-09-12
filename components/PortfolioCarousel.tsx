@@ -122,7 +122,7 @@ const PortfolioCarousel = () => {
         <div className="flex justify-center mt-10">
           <a
             href="/portfolio"
-            className="glass-panel px-8 py-3 rounded-full text-lg font-bold text-black dark:text-white bg-gradient-to-r from-red-500 to-pink-500 shadow-lg hover:scale-105 hover:shadow-2xl transition-transform border border-white/30 dark:border-white/10 backdrop-blur-md focus:outline-none focus:ring-4 focus:ring-pink-300"
+            className="glass-panel px-8 py-3 rounded-full text-lg font-bold text-white dark:text-white bg-gradient-to-r from-red-500 to-pink-500 shadow-lg hover:scale-105 hover:shadow-2xl transition-transform border border-white/30 dark:border-white/10 backdrop-blur-md focus:outline-none focus:ring-4 focus:ring-pink-300"
             aria-label="See all projects"
             style={{
               textShadow: "0 2px 8px rgba(255,255,255,0.7), 0 1px 0 #fff",
