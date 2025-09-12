@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { DateRange } from 'react-date-range';
-import 'react-date-range/dist/styles.css'; // main style file
 import { toast } from 'react-hot-toast';
 import { GlassInput } from '../ui/GlassInput';
 import { NeonButton } from '../ui/NeonButton';

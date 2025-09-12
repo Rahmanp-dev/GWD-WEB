@@ -3,6 +3,7 @@ import ToastProvider from "@/components/ToastProvider";
 import BackgroundSelector from "@/components/BackgroundSelector";
 import TopLeftLogo from "@/components/ui/TopLeftLogo";
 import FloatingNavbar from "@/components/ui/FloatingNavbar";
+import Footer from "@/components/Footer"; // Import the Footer component
 import "./globals.css";
 import dynamic from "next/dynamic";
 
@@ -13,8 +14,8 @@ const SmoothCursor = dynamic(() => import("@/components/ui/smooth-cursor"), {
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "LGWD",
-  description: "Let's Get Work Done - Freelancing Platform",
+  title: "GWD",
+  description: "Get Work Done - Freelancing Platform",
 };
 
 export default function RootLayout({
@@ -46,6 +47,7 @@ export default function RootLayout({
         <TopLeftLogo />
         <FloatingNavbar />
         <main style={{ position: "relative", zIndex: 1 }}>{children}</main>
+        <Footer />
       </body>
     </html>
   );

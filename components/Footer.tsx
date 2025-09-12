@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
           {/* Branding & Contact */}
           <div className="md:col-span-2 lg:col-span-1">
             <h2 className="text-2xl font-bold text-white tracking-wider">GWD Global</h2>
-            <p className="text-gray-400 mt-2 text-sm">Innovate. Create. Elevate.</p>
+            <p className="text-gray-400 mt-2 text-sm">Your Vision, Our Expertise.</p>
             <div className="mt-6 space-y-4 text-sm">
               <p className="text-gray-300">2-56/33/15/A, Sri Sai Nagar,<br/>Madhapur, Hyderabad, 500081</p>
               <p><span className="font-semibold text-white">Phone:</span> <a href="tel:+917981374451" className="text-red-400 hover:text-red-300">+91 79813 74451</a></p>

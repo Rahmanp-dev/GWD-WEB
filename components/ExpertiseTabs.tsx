@@ -34,7 +34,7 @@ export const ExpertiseTabs: React.FC<ExpertiseTabsProps> = ({ domains }) => {
             onMouseEnter={!isMobile ? () => setOpenIdx(idx) : undefined}
             onMouseLeave={!isMobile ? () => setOpenIdx(null) : undefined}
             onClick={isMobile ? () => handleTabClick(idx) : undefined}
-            className={`relative flex flex-col items-center justify-center border border-red-500 bg-red-500/10 backdrop-blur-2xl shadow-xl rounded-2xl transition-all duration-700 cursor-pointer overflow-visible ${expanded ? "sm:flex-[6] flex-[unset] bg-red-500/20 border-2 border-red-500 shadow-2xl z-10 ring-2 ring-red-500/30" : "sm:flex-1 flex-[unset] hover:bg-red-500/10 hover:border-red-500 hover:shadow-2xl"} min-h-[80px] sm:min-h-[320px] h-full w-full sm:w-auto`}
+            className={`relative flex flex-col items-center justify-center border border-red-500 bg-red-500/10 backdrop-blur-2xl shadow-xl rounded-2xl transition-all duration-700 cursor-pointer overflow-visible ${expanded ? "sm:flex-[6] flex-[unset] bg-red-500/20 border-2 border-red-500 shadow-2xl z-10" : "sm:flex-1 flex-[unset] hover:bg-red-500/10 hover:border-red-500 hover:shadow-2xl"} min-h-[80px] sm:min-h-[320px] h-full w-full sm:w-auto`}
             style={{ minWidth: 64, willChange: "flex, background, box-shadow" }}
             transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
           >
@@ -93,4 +93,4 @@ export const ExpertiseTabs: React.FC<ExpertiseTabsProps> = ({ domains }) => {
       })}
     </div>
   );
-}; 
+};

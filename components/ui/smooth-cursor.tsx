@@ -14,8 +14,8 @@ export interface SmoothCursorProps {
     damping: number;
     stiffness: number;
     mass: number;
-    restDelta: number;
   };
+  rotationAngle?: number;
 }
 
 const DefaultCursorSVG: FC = () => {
@@ -82,64 +82,40 @@ const DefaultCursorSVG: FC = () => {
 
 const SmoothCursor: FC<SmoothCursorProps> = ({
   cursor = <DefaultCursorSVG />,
-  springConfig = {
-    damping: 80,
-    stiffness: 3000,
-    mass: 0.5,
-    restDelta: 0.001,
-  },
+  springConfig = { damping: 30, stiffness: 500, mass: 0.5 },
+  rotationAngle = 15, // A constant rotation angle for a subtle tilt
 }) => {
-  const lastMousePos = useRef<Position>({ x: 0, y: 0 });
-  const velocity = useRef<Position>({ x: 0, y: 0 });
-  const lastUpdateTime = useRef(Date.now());
-  const previousAngle = useRef(0);
-  const accumulatedRotation = useRef(0);
-
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
-  const rotation = useSpring(0, { ...springConfig, damping: 40, stiffness: 500 });
-  const scale = useSpring(1, { ...springConfig, stiffness: 800, damping: 30 });
+  const rotation = useSpring(0, springConfig);
+
+  const lastMousePos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    if (typeof window === 'undefined') return; // Ensure this only runs on the client
+
     document.body.style.cursor = 'none';
 
     const handleMouseMove = (e: MouseEvent) => {
-      const currentTime = Date.now();
-      const deltaTime = currentTime - lastUpdateTime.current;
-      const currentPos = { x: e.clientX, y: e.clientY };
+      const { clientX, clientY } = e;
+      cursorX.set(clientX);
+      cursorY.set(clientY);
 
-      if (deltaTime > 0) {
-        velocity.current = {
-          x: (currentPos.x - lastMousePos.current.x) / deltaTime,
-          y: (currentPos.y - lastMousePos.current.y) / deltaTime,
-        };
-      }
+      const velocityX = clientX - lastMousePos.current.x;
+      lastMousePos.current = { x: clientX, y: clientY };
 
-      lastUpdateTime.current = currentTime;
-      lastMousePos.current = currentPos;
-
-      cursorX.set(currentPos.x);
-      cursorY.set(currentPos.y);
-
-      const speed = Math.sqrt(Math.pow(velocity.current.x, 2) + Math.pow(velocity.current.y, 2));
-      if (speed > 0.1) {
-        const currentAngle = Math.atan2(velocity.current.y, velocity.current.x) * (180 / Math.PI) + 90;
-        let angleDiff = currentAngle - previousAngle.current;
-        if (angleDiff > 180) angleDiff -= 360;
-        if (angleDiff < -180) angleDiff += 360;
-        accumulatedRotation.current += angleDiff;
-        rotation.set(accumulatedRotation.current);
-        previousAngle.current = currentAngle;
-      }
+      // Simple rotation based on horizontal velocity
+      const newRotation = velocityX * rotationAngle;
+      rotation.set(newRotation);
     };
-    
+
     window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      document.body.style.cursor = 'auto'; // Restore cursor on unmount
+      document.body.style.cursor = 'auto';
     };
-  }, [cursorX, cursorY, rotation, scale]);
+  }, [cursorX, cursorY, rotation, rotationAngle]);
 
   return (
     <motion.div
@@ -152,8 +128,7 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
         translateX: '-50%',
         translateY: '-50%',
         rotate: rotation,
-        scale: scale,
-        zIndex: 9999, // Increased z-index
+        zIndex: 9999,
         pointerEvents: 'none',
         willChange: 'transform',
       }}
