@@ -96,7 +96,7 @@ export function ExpertiseShowcase() {
       aria-label="Featured Projects Carousel">
       <div className="max-w-screen-xl mx-auto flex flex-col items-center text-center px-4">
         <h2 className="text-5xl md:text-7xl font-bold text-white mb-8">Our Expertise</h2>
-        <p className="text-lg md:text-xl text-gray-400 mb-12">
+        <p className="text-lg md:text-xl text-[rgb(var(--foreground-muted))] mb-12">
           We master a wide array of technologies to bring your vision to life.
         </p>
         <div className="w-full h-[400px] relative">
@@ -117,9 +117,9 @@ export function ExpertiseShowcase() {
               <div className="flex flex-col h-full">
                 <div className="flex items-center mb-6">
                   <img src={card.icon} alt={card.label} className="w-12 h-12 mr-6" />
-                  <h2 className="text-3xl md:text-4xl font-bold text-red-400">{card.label}</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold text-[rgb(var(--accent))]">{card.label}</h2>
                 </div>
-                <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-gray-300">
+                <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-[rgb(var(--foreground-muted))]">
                   {card.stack.map((tech, i) => (
                     <p key={i} className="text-sm md:text-base">{tech}</p>
                   ))}

@@ -10,6 +10,7 @@
 :root {
   --background: 10 10 10;
   --foreground: 255 255 255;
+  --foreground-muted: 220 220 220;
   --primary: 255 255 255;
   --primary-foreground: 229 57 53;
   --secondary: 26 26 26;

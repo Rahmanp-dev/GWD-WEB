@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import ToastProvider from "@/components/ToastProvider";
 import BackgroundSelector from "@/components/BackgroundSelector";
-import TopRightLogo from "@/components/ui/TopRightLogo";
+import TopLeftLogo from "@/components/ui/TopLeftLogo";
 import FloatingNavbar from "@/components/ui/FloatingNavbar";
 import "./globals.css";
 import dynamic from "next/dynamic";
@@ -43,7 +43,7 @@ export default function RootLayout({
         <SmoothCursor />
         <ToastProvider />
         <BackgroundSelector />
-        <TopRightLogo />
+        <TopLeftLogo />
         <FloatingNavbar />
         <main style={{ position: "relative", zIndex: 1 }}>{children}</main>
       </body>

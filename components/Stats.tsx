@@ -19,7 +19,7 @@ export function Stats() {
             <h2 className="text-4xl md:text-5xl font-bold text-white">
               Built for Scale. Powered by Talent.
             </h2>
-            <p className="text-gray-400 mt-6">
+            <p className="text-[rgb(var(--foreground-muted))] mt-6">
               We’re not just a marketplace—we’re an ecosystem of 450+ vetted experts, 60+ trusted enterprise partners, and 115+ successful projects delivered across industries.
 Whether you're launching a product, scaling your business, or solving complex tech challenges — our platform connects you with the right talent at the right time.
             </p>
@@ -34,7 +34,7 @@ Whether you're launching a product, scaling your business, or solving complex te
                   <div className="text-5xl md:text-6xl font-bold text-white">
                     <CountUp to={stat.value} duration={3} />+
                   </div>
-                  <p className="text-gray-400 mt-2 text-sm md:text-base">{stat.label}</p>
+                  <p className="text-[rgb(var(--foreground-muted))] mt-2 text-sm md:text-base">{stat.label}</p>
                 </div>
                 {index < stats.length - 1 && (
                   <div className="h-24 w-px bg-gray-700 hidden md:block"></div>
