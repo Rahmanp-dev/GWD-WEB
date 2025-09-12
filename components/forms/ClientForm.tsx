@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { toast } from 'react-hot-toast';
 import { GlassInput } from '../ui/GlassInput';
 import { NeonButton } from '../ui/NeonButton';
@@ -26,12 +26,12 @@ export const ClientForm = ({ serviceLabel }: ClientFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleContinuousChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContinuousChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIsContinuous(e.target.checked);
     if (e.target.checked) {
       setEndDate(''); // Clear end date
@@ -129,7 +129,7 @@ export const ClientForm = ({ serviceLabel }: ClientFormProps) => {
                 type="date"
                 id="startDate"
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(e.target.value)}
                 required
                 className="mt-1"
                 min={new Date().toISOString().split("T")[0]}
@@ -141,7 +141,7 @@ export const ClientForm = ({ serviceLabel }: ClientFormProps) => {
                 type="date"
                 id="endDate"
                 value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(e.target.value)}
                 required={!isContinuous}
                 disabled={isContinuous}
                 className={`mt-1 w-full ${isContinuous ? 'opacity-50 cursor-not-allowed' : ''}`}
