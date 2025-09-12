@@ -85,7 +85,7 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
 }) => {
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
-  const rotation = useSpring(0, { damping: 60, stiffness: 300, mass: 1 });
+  const rotation = useSpring(0, { damping: 30, stiffness: 200, mass: 0.7 });
 
   const lastMousePos = useRef<Position>({ x: 0, y: 0 });
   const velocity = useRef<Position>({ x: 0, y: 0 });
