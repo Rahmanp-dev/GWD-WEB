@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, useSpring, useTransform } from 'framer-motion';
-import { FC, JSX, useEffect, useRef, useState } from 'react';
+import { motion, useSpring } from 'framer-motion';
+import { FC, JSX, useEffect, useRef } from 'react';
 
 interface Position {
   x: number;
@@ -89,7 +89,6 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
     restDelta: 0.001,
   },
 }) => {
-  const [isMoving, setIsMoving] = useState(false);
   const lastMousePos = useRef<Position>({ x: 0, y: 0 });
   const velocity = useRef<Position>({ x: 0, y: 0 });
   const lastUpdateTime = useRef(Date.now());
@@ -98,21 +97,16 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
 
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
-  const rotation = useSpring(0, {
-    ...springConfig,
-    damping: 40,
-    stiffness: 500,
-  });
-  const scale = useSpring(1, {
-    ...springConfig,
-    stiffness: 800,
-    damping: 30,
-  });
+  const rotation = useSpring(0, { ...springConfig, damping: 40, stiffness: 500 });
+  const scale = useSpring(1, { ...springConfig, stiffness: 800, damping: 30 });
 
   useEffect(() => {
-    const updateVelocity = (currentPos: Position) => {
+    document.body.style.cursor = 'none';
+
+    const handleMouseMove = (e: MouseEvent) => {
       const currentTime = Date.now();
       const deltaTime = currentTime - lastUpdateTime.current;
+      const currentPos = { x: e.clientX, y: e.clientY };
 
       if (deltaTime > 0) {
         velocity.current = {
@@ -123,60 +117,27 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
 
       lastUpdateTime.current = currentTime;
       lastMousePos.current = currentPos;
-    };
-
-    const smoothMouseMove = (e: MouseEvent) => {
-      const currentPos = { x: e.clientX, y: e.clientY };
-      updateVelocity(currentPos);
-
-      const speed = Math.sqrt(
-        Math.pow(velocity.current.x, 2) + Math.pow(velocity.current.y, 2),
-      );
 
       cursorX.set(currentPos.x);
       cursorY.set(currentPos.y);
 
+      const speed = Math.sqrt(Math.pow(velocity.current.x, 2) + Math.pow(velocity.current.y, 2));
       if (speed > 0.1) {
-        const currentAngle =
-          Math.atan2(velocity.current.y, velocity.current.x) * (180 / Math.PI) +
-          90;
-
+        const currentAngle = Math.atan2(velocity.current.y, velocity.current.x) * (180 / Math.PI) + 90;
         let angleDiff = currentAngle - previousAngle.current;
         if (angleDiff > 180) angleDiff -= 360;
         if (angleDiff < -180) angleDiff += 360;
         accumulatedRotation.current += angleDiff;
         rotation.set(accumulatedRotation.current);
         previousAngle.current = currentAngle;
-
-        scale.set(0.95);
-        setIsMoving(true);
-
-        const timeout = setTimeout(() => {
-          scale.set(1);
-          setIsMoving(false);
-        }, 150);
-
-        return () => clearTimeout(timeout);
       }
     };
-
-    let rafId: number;
-    const throttledMouseMove = (e: MouseEvent) => {
-      if (rafId) return;
-
-      rafId = requestAnimationFrame(() => {
-        smoothMouseMove(e);
-        rafId = 0;
-      });
-    };
-
-    document.body.style.cursor = 'none';
-    window.addEventListener('mousemove', throttledMouseMove);
+    
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      window.removeEventListener('mousemove', throttledMouseMove);
-      document.body.style.cursor = 'auto';
-      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.body.style.cursor = 'auto'; // Restore cursor on unmount
     };
   }, [cursorX, cursorY, rotation, scale]);
 
@@ -192,17 +153,13 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
         translateY: '-50%',
         rotate: rotation,
         scale: scale,
-        zIndex: 100,
+        zIndex: 9999, // Increased z-index
         pointerEvents: 'none',
         willChange: 'transform',
       }}
-      initial={{ scale: 0, x: -100, y: -100 }}
-      animate={{ scale: 1, x: cursorX, y: cursorY }}
-      transition={{
-        type: 'spring',
-        stiffness: 400,
-        damping: 30,
-      }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
     >
       {cursor}
     </motion.div>

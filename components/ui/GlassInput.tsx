@@ -4,6 +4,7 @@ import React, { InputHTMLAttributes, TextareaHTMLAttributes, forwardRef } from '
 type GlassInputProps = (InputHTMLAttributes<HTMLInputElement> | TextareaHTMLAttributes<HTMLTextAreaElement>) & {
   as?: 'input' | 'textarea';
   label?: string;
+  type?: string;
 };
 
 export const GlassInput = forwardRef<HTMLInputElement | HTMLTextAreaElement, GlassInputProps>(({ as: Component = 'input', className, type, label, ...props }, ref) => {

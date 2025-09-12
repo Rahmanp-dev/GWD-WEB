@@ -7,7 +7,7 @@ export const Spotlight: React.FC<SpotlightProps> = ({}) => {
     <div
       className={
         `pointer-events-none absolute inset-0 z-0 transition-all duration-1000 animate-spotlight` +
-        ` bg-[radial-gradient(ellipse_at_center,theme(colors.red-500),theme(colors.red-900)_80%)]`
+        ` bg-[radial-gradient(ellipse_at_center,#ef4444,#7f1d1d_80%)]`
       }
       style={{
         opacity: 0.7,
