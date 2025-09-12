@@ -13,6 +13,7 @@
         "@prisma/client": "^6.10.1",
         "@radix-ui/react-label": "^2.1.7",
         "@react-three/fiber": "^8.18.0",
+        "@studio-freight/react-lenis": "^0.0.47",
         "@tabler/icons-react": "^3.34.0",
         "@tanstack/react-table": "^8.10.7",
         "@tsparticles/engine": "^3.8.1",

@@ -15,7 +15,6 @@ export interface SmoothCursorProps {
     stiffness: number;
     mass: number;
   };
-  rotationAngle?: number;
 }
 
 const DefaultCursorSVG: FC = () => {
@@ -82,40 +81,78 @@ const DefaultCursorSVG: FC = () => {
 
 const SmoothCursor: FC<SmoothCursorProps> = ({
   cursor = <DefaultCursorSVG />,
-  springConfig = { damping: 30, stiffness: 500, mass: 0.5 },
-  rotationAngle = 15, // A constant rotation angle for a subtle tilt
+  springConfig = { damping: 30, stiffness: 250, mass: 0.5 },
 }) => {
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
-  const rotation = useSpring(0, springConfig);
+  const rotation = useSpring(0, { damping: 60, stiffness: 300, mass: 1 });
 
-  const lastMousePos = useRef({ x: 0, y: 0 });
+  const lastMousePos = useRef<Position>({ x: 0, y: 0 });
+  const velocity = useRef<Position>({ x: 0, y: 0 });
+  const lastUpdateTime = useRef(Date.now());
+  const previousAngle = useRef(0);
+  const accumulatedRotation = useRef(0);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return; // Ensure this only runs on the client
+    if (typeof window === 'undefined') return;
 
     document.body.style.cursor = 'none';
 
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
+      const currentTime = Date.now();
+      const deltaTime = currentTime - lastUpdateTime.current;
+
+      if (deltaTime > 0) {
+        velocity.current = {
+          x: (clientX - lastMousePos.current.x) / deltaTime,
+          y: (clientY - lastMousePos.current.y) / deltaTime,
+        };
+      }
+
+      lastMousePos.current = { x: clientX, y: clientY };
+      lastUpdateTime.current = currentTime;
+
       cursorX.set(clientX);
       cursorY.set(clientY);
 
-      const velocityX = clientX - lastMousePos.current.x;
-      lastMousePos.current = { x: clientX, y: clientY };
+      const speed = Math.sqrt(
+        Math.pow(velocity.current.x, 2) + Math.pow(velocity.current.y, 2)
+      );
 
-      // Simple rotation based on horizontal velocity
-      const newRotation = velocityX * rotationAngle;
-      rotation.set(newRotation);
+      if (speed > 0.1) {
+        const currentAngle =
+          Math.atan2(velocity.current.y, velocity.current.x) * (180 / Math.PI) +
+          90;
+
+        let angleDiff = currentAngle - previousAngle.current;
+        if (angleDiff > 180) angleDiff -= 360;
+        if (angleDiff < -180) angleDiff += 360;
+        
+        accumulatedRotation.current += angleDiff;
+        rotation.set(accumulatedRotation.current);
+
+        previousAngle.current = currentAngle;
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    let rafId: number;
+    const throttledMouseMove = (e: MouseEvent) => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        handleMouseMove(e);
+        rafId = 0;
+      });
+    };
+
+    window.addEventListener('mousemove', throttledMouseMove);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', throttledMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
       document.body.style.cursor = 'auto';
     };
-  }, [cursorX, cursorY, rotation, rotationAngle]);
+  }, [cursorX, cursorY, rotation]);
 
   return (
     <motion.div

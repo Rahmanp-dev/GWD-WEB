@@ -3,7 +3,8 @@ import ToastProvider from "@/components/ToastProvider";
 import BackgroundSelector from "@/components/BackgroundSelector";
 import TopLeftLogo from "@/components/ui/TopLeftLogo";
 import FloatingNavbar from "@/components/ui/FloatingNavbar";
-import Footer from "@/components/Footer"; // Import the Footer component
+import Footer from "@/components/Footer";
+import SmoothScroll from "@/components/ui/smooth-scroll"; // Import the SmoothScroll component
 import "./globals.css";
 import dynamic from "next/dynamic";
 
@@ -41,13 +42,15 @@ export default function RootLayout({
         className={inter.className + " font-body text-white bg-dark-bg"}
         style={{ position: "relative", minHeight: "100vh" }}
       >
-        <SmoothCursor />
-        <ToastProvider />
-        <BackgroundSelector />
-        <TopLeftLogo />
-        <FloatingNavbar />
-        <main style={{ position: "relative", zIndex: 1 }}>{children}</main>
-        <Footer />
+        <SmoothScroll>
+          <SmoothCursor />
+          <ToastProvider />
+          <BackgroundSelector />
+          <TopLeftLogo />
+          <FloatingNavbar />
+          <main style={{ position: "relative", zIndex: 1 }}>{children}</main>
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );
