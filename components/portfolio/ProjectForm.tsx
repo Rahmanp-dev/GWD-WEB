@@ -1,7 +1,7 @@
 'use client';
 import { format } from 'date-fns';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, ChangeEvent } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { GlassFormWrapper } from '../GlassFormWrapper';
 import { GlassInput } from '../ui/GlassInput';
@@ -143,34 +143,34 @@ export function ProjectForm({ initial, onSave }: { initial?: any; onSave: (data:
         
         <div className="md:col-span-2">
           <label htmlFor="title" className="block font-semibold mb-2 text-white">Title</label>
-          <GlassInput id="title" value={form.title} onChange={e => handleTitleChange(e.target.value)} />
+          <GlassInput id="title" value={form.title} onChange={(e: ChangeEvent<HTMLInputElement>) => handleTitleChange(e.target.value)} />
         </div>
         
         <div className="md:col-span-2">
           <label htmlFor="slug" className="block font-semibold mb-2 text-white">Slug</label>
-          <GlassInput id="slug" value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} />
+          <GlassInput id="slug" value={form.slug} onChange={(e: ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, slug: e.target.value }))} />
         </div>
 
         <div>
           <label htmlFor="domain" className="block font-semibold mb-2 text-white">Domain</label>
-          <select id="domain" className="input-glass w-full" value={form.domain} onChange={e => setForm(f => ({ ...f, domain: e.target.value }))}>
+          <select id="domain" className="input-glass w-full" value={form.domain} onChange={(e: ChangeEvent<HTMLSelectElement>) => setForm(f => ({ ...f, domain: e.target.value }))}>
             {DOMAINS.map(d => <option key={d.value} value={d.value} className="bg-black/80 text-white">{d.label}</option>)}
           </select>
         </div>
 
         <div>
           <label htmlFor="date" className="block font-semibold mb-2 text-white">Date</label>
-          <GlassInput id="date" type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
+          <GlassInput id="date" type="date" value={form.date} onChange={(e: ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, date: e.target.value }))} />
         </div>
         
         <div>
             <label htmlFor="yearStart" className="block font-semibold mb-2 text-white">Start Year</label>
-            <GlassInput id="yearStart" type="number" value={form.yearStart} onChange={e => setForm(f => ({...f, yearStart: parseInt(e.target.value,10)}))} />
+            <GlassInput id="yearStart" type="number" value={form.yearStart} onChange={(e: ChangeEvent<HTMLInputElement>) => setForm(f => ({...f, yearStart: parseInt(e.target.value,10)}))} />
         </div>
         
         <div>
             <label htmlFor="yearEnd" className="block font-semibold mb-2 text-white">End Year</label>
-            <GlassInput id="yearEnd" type="number" value={form.yearEnd} onChange={e => setForm(f => ({...f, yearEnd: parseInt(e.target.value,10)}))} />
+            <GlassInput id="yearEnd" type="number" value={form.yearEnd} onChange={(e: ChangeEvent<HTMLInputElement>) => setForm(f => ({...f, yearEnd: parseInt(e.target.value,10)}))} />
         </div>
 
         <div className="md:col-span-2">
@@ -205,11 +205,11 @@ export function ProjectForm({ initial, onSave }: { initial?: any; onSave: (data:
 
         <div className="md:col-span-2">
           <label htmlFor="tags" className="block font-semibold mb-2 text-white">Tags (comma-separated)</label>
-          <GlassInput id="tags" value={form.tags.join(', ')} onChange={e => handleTags(e.target.value)} />
+          <GlassInput id="tags" value={form.tags.join(', ')} onChange={(e: ChangeEvent<HTMLInputElement>) => handleTags(e.target.value)} />
         </div>
         
         <div className="md:col-span-2 flex items-center gap-4">
-          <input id="featured" type="checkbox" checked={form.featured} onChange={e => setForm(f => ({ ...f, featured: e.target.checked }))} className="w-5 h-5 accent-red-500 rounded" />
+          <input id="featured" type="checkbox" checked={form.featured} onChange={(e: ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, featured: e.target.checked }))} className="w-5 h-5 accent-red-500 rounded" />
           <label htmlFor="featured" className="font-semibold text-white">Featured Project</label>
         </div>
 

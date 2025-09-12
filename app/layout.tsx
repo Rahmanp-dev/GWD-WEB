@@ -1,10 +1,14 @@
 import { Inter } from "next/font/google";
 import ToastProvider from "@/components/ToastProvider";
-import SmoothCursor from "@/components/ui/smooth-cursor";
 import BackgroundSelector from "@/components/BackgroundSelector";
 import TopRightLogo from "@/components/ui/TopRightLogo";
 import FloatingNavbar from "@/components/ui/FloatingNavbar";
 import "./globals.css";
+import dynamic from "next/dynamic";
+
+const SmoothCursor = dynamic(() => import("@/components/ui/smooth-cursor"), {
+  ssr: false,
+});
 
 const inter = Inter({ subsets: ["latin"] });
 

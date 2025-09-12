@@ -9,11 +9,11 @@
 ================================================================================*/
 :root {
   --background: 10 10 10;
-  --foreground: 250 250 250;
-  --primary: 250 250 250;
-  --primary-foreground: 10 10 10;
+  --foreground: 255 255 255;
+  --primary: 255 255 255;
+  --primary-foreground: 229 57 53;
   --secondary: 26 26 26;
-  --secondary-foreground: 250 250 250;
+  --secondary-foreground: 255 255 255;
   --accent: 229 57 53; /* Red */
   --accent-foreground: 255 255 255;
   --radius: 0.5rem;
@@ -26,8 +26,8 @@
   /* Inputs */
   --input-bg: rgba(10, 10, 10, 0.35);
   --input-border: rgba(255, 255, 255, 0.1);
-  --input-text: 241 241 241;
-  --input-placeholder: 136 136 136;
+  --input-text: 255 255 255;
+  --input-placeholder: 170 170 170;
   --input-focus-shadow: 0 0 0 2px rgba(var(--background),1), 0 0 0 4px rgba(var(--accent),1);
 }
 

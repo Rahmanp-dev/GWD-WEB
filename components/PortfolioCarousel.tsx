@@ -39,10 +39,10 @@ const PortfolioCarousel = () => {
       aria-label="Featured Projects Carousel"
     >
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-red-100 dark:text-red-100 mb-4">
+        <h2 className="text-3xl font-bold text-center text-white dark:text-white mb-4">
           RECENT WORK
         </h2>
-        <p className="text-center text-gray-800 dark:text-gray-200 mb-12">
+        <p className="text-center text-gray-800 dark:text-white-200 mb-12">
           Explore our latest{" "}
           <span className="font-semibold text-primary">featured</span> projects
         </p>
@@ -100,7 +100,7 @@ const PortfolioCarousel = () => {
                     <div className="w-full h-64 bg-gray-200 rounded-t-3xl flex items-center justify-center" role="img" aria-label="No media available" />
                   )}
                   <div className="p-4 md:p-6 w-full">
-                    <h3 className="text-lg md:text-xl font-bold mb-2 text-gray-900 dark:text-white text-center">
+                    <h3 className="text-lg md:text-xl font-bold mb-2 text-white-900 dark:text-white text-center">
                       {item.title}
                     </h3>
                     <div className="flex flex-wrap gap-2 mb-3 justify-center">

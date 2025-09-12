@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { motion, useSpring } from "motion/react";
-import { FC, JSX, useEffect, useRef, useState } from "react";
+import { motion, useSpring, useTransform } from 'framer-motion';
+import { FC, JSX, useEffect, useRef, useState } from 'react';
 
 interface Position {
   x: number;
@@ -170,12 +170,12 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
       });
     };
 
-    document.body.style.cursor = "none";
-    window.addEventListener("mousemove", throttledMouseMove);
+    document.body.style.cursor = 'none';
+    window.addEventListener('mousemove', throttledMouseMove);
 
     return () => {
-      window.removeEventListener("mousemove", throttledMouseMove);
-      document.body.style.cursor = "auto";
+      window.removeEventListener('mousemove', throttledMouseMove);
+      document.body.style.cursor = 'auto';
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [cursorX, cursorY, rotation, scale]);
@@ -183,21 +183,23 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
   return (
     <motion.div
       style={{
-        position: "fixed",
-        left: cursorX,
-        top: cursorY,
-        translateX: "-50%",
-        translateY: "-50%",
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        x: cursorX,
+        y: cursorY,
+        translateX: '-50%',
+        translateY: '-50%',
         rotate: rotation,
         scale: scale,
         zIndex: 100,
-        pointerEvents: "none",
-        willChange: "transform",
+        pointerEvents: 'none',
+        willChange: 'transform',
       }}
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
+      initial={{ scale: 0, x: -100, y: -100 }}
+      animate={{ scale: 1, x: cursorX, y: cursorY }}
       transition={{
-        type: "spring",
+        type: 'spring',
         stiffness: 400,
         damping: 30,
       }}

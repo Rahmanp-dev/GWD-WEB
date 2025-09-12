@@ -55,7 +55,7 @@ const PortfolioCard = ({
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       </div>
       <div className="p-6">
-        <h3 className="text-xl font-bold text-black mb-2">{title}</h3>
+        <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
         <p className="text-gray-700 mb-4 text-sm">{description}</p>
         <div className="flex gap-2">
           {tags.map((tag) => (
