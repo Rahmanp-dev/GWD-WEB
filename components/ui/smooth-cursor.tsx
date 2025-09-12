@@ -81,11 +81,11 @@ const DefaultCursorSVG: FC = () => {
 
 const SmoothCursor: FC<SmoothCursorProps> = ({
   cursor = <DefaultCursorSVG />,
-  springConfig = { damping: 30, stiffness: 250, mass: 0.5 },
+  springConfig = { damping: 25, stiffness: 500, mass: 0.2 },
 }) => {
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
-  const rotation = useSpring(0, { damping: 30, stiffness: 200, mass: 0.7 });
+  const rotation = useSpring(0, { damping: 25, stiffness: 500, mass: 0.2 });
 
   const lastMousePos = useRef<Position>({ x: 0, y: 0 });
   const velocity = useRef<Position>({ x: 0, y: 0 });
@@ -136,20 +136,10 @@ const SmoothCursor: FC<SmoothCursorProps> = ({
       }
     };
 
-    let rafId: number;
-    const throttledMouseMove = (e: MouseEvent) => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        handleMouseMove(e);
-        rafId = 0;
-      });
-    };
-
-    window.addEventListener('mousemove', throttledMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      window.removeEventListener('mousemove', throttledMouseMove);
-      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('mousemove', handleMouseMove);
       document.body.style.cursor = 'auto';
     };
   }, [cursorX, cursorY, rotation]);
