@@ -130,7 +130,7 @@ export default function PortfolioPage() {
                 style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(12px)", minHeight: "220px", maxHeight: "520px" }}
               >
                 {(selectedProject?.mediaUrls || []).map((url, idx) => (
-                  <SwiperSlide key={idx}>
+                  <SwiperSlide key={`${selectedProject.id}-carousel-${idx}`}>
                     {isValidMediaUrl(url) && isVideo(url) && !videoErrorCarousel[idx] ? (
                       <video
                         src={url}
@@ -154,7 +154,7 @@ export default function PortfolioPage() {
             {(selectedProject?.mediaUrls || []).length > 1 && (
               <div className="flex flex-row gap-2 md:gap-3 justify-center items-center mt-4 md:mt-6 mb-4 md:mb-6 overflow-x-auto">
                 {(selectedProject?.mediaUrls || []).map((url, idx) => (
-                  <div key={idx} className="rounded-lg overflow-hidden border border-white/20 bg-black/30 w-14 h-10 md:w-20 md:h-14 flex items-center justify-center">
+                  <div key={`${selectedProject.id}-thumb-${idx}`} className="rounded-lg overflow-hidden border border-white/20 bg-black/30 w-14 h-10 md:w-20 md:h-14 flex items-center justify-center">
                     {isValidMediaUrl(url) && isVideo(url) ? (
                       <video src={url} className="w-full h-full object-cover bg-black/60" muted playsInline preload="metadata" controls={false} />
                     ) : isValidMediaUrl(url) && isImage(url) ? (

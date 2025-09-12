@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { DateRange } from 'react-date-range';
 import { toast } from 'react-hot-toast';
 import { GlassInput } from '../ui/GlassInput';
 import { NeonButton } from '../ui/NeonButton';
@@ -20,13 +19,10 @@ export const ClientForm = ({ serviceLabel }: ClientFormProps) => {
     details: '',
     budget: '',
   });
-  const [dateRange, setDateRange] = useState<any[]>([
-    {
-      startDate: new Date(),
-      endDate: null,
-      key: 'selection',
-    },
-  ]);
+
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [isContinuous, setIsContinuous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
@@ -35,26 +31,43 @@ export const ClientForm = ({ serviceLabel }: ClientFormProps) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleContinuousChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsContinuous(e.target.checked);
+    if (e.target.checked) {
+      setEndDate(''); // Clear end date
+    }
+  };
+
   const resetForm = () => {
     setFormData({ name: '', email: '', phone: '', company: '', service: serviceLabel, details: '', budget: '' });
-    setDateRange([
-      {
-        startDate: new Date(),
-        endDate: null,
-        key: 'selection',
-      },
-    ]);
+    setStartDate('');
+    setEndDate('');
+    setIsContinuous(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!startDate) {
+      toast.error('Please select a start date.');
+      return;
+    }
+    if (!isContinuous && !endDate) {
+      toast.error('Please select an end date or mark the project as continuous.');
+      return;
+    }
+
     setIsSubmitting(true);
+
     const payload = {
       ...formData,
-      service: serviceLabel,
-      timeline: { startDate: dateRange[0].startDate, endDate: dateRange[0].endDate },
+      timeline: {
+        startDate,
+        endDate: isContinuous ? 'Continuous' : endDate,
+      },
       type: 'client',
     };
+
     try {
       const res = await fetch('/api/requests', {
         method: 'POST',
@@ -66,10 +79,10 @@ export const ClientForm = ({ serviceLabel }: ClientFormProps) => {
         resetForm();
       } else {
         const errorData = await res.json();
-        toast.error(errorData.error || 'Failed to submit inquiry. Please try again.');
+        toast.error(errorData.error || 'Failed to submit inquiry.');
       }
     } catch (err) {
-      toast.error('An unexpected error occurred. Please check your connection and try again.');
+      toast.error('An unexpected error occurred.');
     } finally {
       setIsSubmitting(false);
     }
@@ -106,18 +119,47 @@ export const ClientForm = ({ serviceLabel }: ClientFormProps) => {
           <label htmlFor="details">Project Details</label>
           <GlassInput as="textarea" name="details" id="details" placeholder="Tell us everything about your project..." value={formData.details} onChange={handleChange} required rows={5} className="mt-2" />
         </div>
+
         <div className="sm:col-span-2">
-          <label>Project Timeline</label>
-          <div className="mt-2 glass-panel p-4">
-            <DateRange
-                editableDateInputs={true}
-                onChange={item => setDateRange([item.selection])}
-                moveRangeOnFirstSelection={false}
-                ranges={dateRange}
-                minDate={new Date()}
-                rangeColors={[ '#E53935' ]}
-                className="w-full bg-transparent"
+          <label className="block mb-2 font-semibold">Project Timeline</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center p-4 glass-panel -m-4 mt-2">
+            <div>
+              <label htmlFor="startDate" className="text-sm opacity-80 mb-1 block">Start Date</label>
+              <GlassInput
+                type="date"
+                id="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+                className="mt-1"
+                min={new Date().toISOString().split("T")[0]}
+              />
+            </div>
+            <div>
+              <label htmlFor="endDate" className="text-sm opacity-80 mb-1 block">End Date</label>
+              <GlassInput
+                type="date"
+                id="endDate"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required={!isContinuous}
+                disabled={isContinuous}
+                className={`mt-1 w-full ${isContinuous ? 'opacity-50 cursor-not-allowed' : ''}`}
+                min={startDate || new Date().toISOString().split("T")[0]}
+              />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center">
+            <input
+              type="checkbox"
+              id="continuous"
+              checked={isContinuous}
+              onChange={handleContinuousChange}
+              className="custom-checkbox"
             />
+            <label htmlFor="continuous" className="ml-3 text-sm cursor-pointer">
+              This is a continuous / ongoing project.
+            </label>
           </div>
         </div>
       </div>
