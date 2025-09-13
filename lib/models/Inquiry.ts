@@ -8,8 +8,8 @@ export interface IInquiry extends Document {
   status: "new" | "contacted" | "approved";
   createdAt: Date;
   updatedAt: Date;
-  notes: string;
-  followUp: Date;
+  notes?: string;
+  followUp?: Date;
 }
 
 const InquirySchema = new Schema<IInquiry>(
@@ -32,4 +32,4 @@ const InquirySchema = new Schema<IInquiry>(
 const Inquiry =
   models.Inquiry || model<IInquiry>("Inquiry", InquirySchema);
 
-export default Inquiry; 
+export default Inquiry;
