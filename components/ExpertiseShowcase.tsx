@@ -1,11 +1,13 @@
-import React from "react";
-import ScrollStack, { ScrollStackItem } from './ui/ScrollStack';
+"use client";
+
+import React, { useState, useEffect } from "react";
+import ScrollStack, { ScrollStackItem } from "./ui/ScrollStack";
 import { IconCloud } from "@/components/magicui/icon-cloud";
 
 const slugs = [
-  "react", "nextdotjs", "nodedotjs", "typescript", "tailwindcss", "flutter", 
-  "firebase", "androidstudio", "unity", "unrealengine", "blender", "docker", 
-  "kubernetes", "amazonaws", "figma", "adobeaftereffects", "adobepremierepro", 
+  "react", "nextdotjs", "nodedotjs", "typescript", "tailwindcss", "flutter",
+  "firebase", "androidstudio", "unity", "unrealengine", "blender", "docker",
+  "kubernetes", "amazonaws", "figma", "adobeaftereffects", "adobepremierepro",
   "finalcutpro", "davinciresolve", "kalilinux", "wireshark", "burpsuite"
 ];
 
@@ -91,37 +93,67 @@ const domainCards = [
 ];
 
 export function ExpertiseShowcase() {
+  const [cloudRadius, setCloudRadius] = useState(180);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setCloudRadius(120); // Smaller radius for mobile
+      } else {
+        setCloudRadius(180); // Default radius for desktop
+      }
+    };
+
+    handleResize(); // Set initial size
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <section id="our-expertise" className="glass-panel py-20 bg-white/5 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-16"
-      aria-label="Featured Projects Carousel">
+    <section
+      id="our-expertise"
+      className="glass-panel py-12 md:py-20 bg-white/5 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-white/20 shadow-2xl my-16"
+      aria-label="Our Expertise Showcase"
+    >
       <div className="max-w-screen-xl mx-auto flex flex-col items-center text-center px-4">
-        <h2 className="text-5xl md:text-7xl font-bold text-white mb-8">Our Expertise</h2>
-        <p className="text-lg md:text-xl text-[rgb(var(--foreground-muted))] mb-12">
+        <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+          Our Expertise
+        </h2>
+        <p className="text-base md:text-lg text-gray-300 mb-10">
           We master a wide array of technologies to bring your vision to life.
         </p>
-        <div className="w-full h-[400px] relative">
+        <div className="w-full h-[300px] md:h-[400px] relative">
           <IconCloud
-            images={slugs.map(slug => `https://cdn.simpleicons.org/${slug}`)}
-            radius={180}
+            images={slugs.map((slug) => `https://cdn.simpleicons.org/${slug}`)}
+            radius={cloudRadius}
             speed={4}
           />
         </div>
       </div>
-      <div className="max-w-screen-xl mx-auto px-4">
-        <ScrollStack
-          itemScale={0.02}
-          stackPosition="15vh"
-        >
+      <div className="max-w-screen-xl mx-auto px-4 mt-8">
+        <ScrollStack itemScale={0.02} stackPosition="15vh">
           {domainCards.map((card, index) => (
-            <ScrollStackItem key={index} itemClassName="glass-panel text-white p-8 md:p-12">
+            <ScrollStackItem
+              key={index}
+              itemClassName="glass-panel text-white p-6 md:p-10"
+            >
               <div className="flex flex-col h-full">
-                <div className="flex items-center mb-6">
-                  <img src={card.icon} alt={card.label} className="w-12 h-12 mr-6" />
-                  <h2 className="text-3xl md:text-4xl font-bold text-[rgb(var(--accent))]">{card.label}</h2>
+                <div className="flex items-center mb-4">
+                  <img
+                    src={card.icon}
+                    alt={card.label}
+                    className="w-8 h-8 md:w-12 md:h-12 mr-4"
+                  />
+                  <h2 className="text-2xl md:text-3xl font-bold text-red-500">
+                    {card.label}
+                  </h2>
                 </div>
-                <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-[rgb(var(--foreground-muted))]">
+                <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-gray-300">
                   {card.stack.map((tech, i) => (
-                    <p key={i} className="text-sm md:text-base">{tech}</p>
+                    <p key={i} className="text-xs md:text-sm">
+                      {tech}
+                    </p>
                   ))}
                 </div>
               </div>

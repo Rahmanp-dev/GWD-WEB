@@ -2,12 +2,12 @@
 
 import BackgroundParticles from "./BackgroundParticles";
 import EventCard from '@/components/cards/EventCard';
-import { SerializableEvent, SerializableCarouselImage } from '@/app/events/page';
+import { SerializedEvent, SerializedCarouselImage } from '@/lib/models/Event';
 import EventCarousel from './EventCarousel';
 
 interface EventsClientProps {
-    events: SerializableEvent[];
-    carouselImages: SerializableCarouselImage[];
+    events: SerializedEvent[];
+    carouselImages: SerializedCarouselImage[];
 }
 
 const EventsClient = ({ events, carouselImages }: EventsClientProps) => {

@@ -6,11 +6,7 @@ import FloatingNavbar from "@/components/ui/FloatingNavbar";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/ui/smooth-scroll"; // Import the SmoothScroll component
 import "./globals.css";
-import dynamic from "next/dynamic";
-
-const SmoothCursor = dynamic(() => import("@/components/ui/smooth-cursor"), {
-  ssr: false,
-});
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,7 +39,6 @@ export default function RootLayout({
         style={{ position: "relative", minHeight: "100vh" }}
       >
         <SmoothScroll>
-          <SmoothCursor />
           <ToastProvider />
           <BackgroundSelector />
           <TopLeftLogo />
@@ -51,6 +46,7 @@ export default function RootLayout({
           <main style={{ position: "relative", zIndex: 1 }}>{children}</main>
           <Footer />
         </SmoothScroll>
+        <Analytics />
       </body>
     </html>
   );

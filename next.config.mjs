@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    // IMPORTANT: Only client-side environment variables should be exposed here.
+    // Server-side variables are automatically available in the server environment.
     env: {
         NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-        ADMIN_USERNAME: process.env.ADMIN_USERNAME,
-        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     },
     images: {
         remotePatterns: [
@@ -21,11 +21,14 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'via.placeholder.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'cdn.simpleicons.org', // Added for expertise icons
+            },
         ],
     },
-    // Suppress SES warnings
+    // Suppress SES warnings (can be kept if needed)
     webpack: (config, { isServer }) => {
-        // Suppress SES lockdown warnings
         config.ignoreWarnings = [
             /The 'dateTaming' option is deprecated/,
             /The 'mathTaming' option is deprecated/,
@@ -38,6 +41,8 @@ const nextConfig = {
     experimental: {
         optimizePackageImports: ['lucide-react', 'framer-motion'],
     },
+    // Vercel optimization: Creates a standalone output for smaller deployment packages
+    output: 'standalone',
 };
 
-export default nextConfig; 
+export default nextConfig;

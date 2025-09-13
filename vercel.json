@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "pages/api/auth/[...nextauth].ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "edge-functions": [
+    {
+      "function": "middleware",
+      "pattern": "/admin/:path*"
+    }
+  ]
+}
